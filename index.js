@@ -290,7 +290,7 @@ ShellCraft.prototype.shutdown = function (callback) {
  *
  * @param {string} shellExt - Path on the shell extension file.
  */
-ShellCraft.prototype.registerExtension = function (shellExt) {
+ShellCraft.prototype.registerExtension = function (shellExt, callback) {
   var self = this;
   var ext = require (shellExt);
 
@@ -298,6 +298,10 @@ ShellCraft.prototype.registerExtension = function (shellExt) {
     extension.forEach (function (cmd) {
       self.commands._add (cmd.name, new Command (cmd.handler, cmd.params, cmd.desc));
     });
+
+    if (callback ()) {
+      callback ();
+    }
   });
 
   this.extensions.push (ext);
