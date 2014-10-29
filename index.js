@@ -109,6 +109,7 @@ function ShellCraft () {
     version: '0.0.1'
   };
   this.prompt  = new Prompt ();
+  this.extensions = [];
 }
 
 /**
@@ -261,6 +262,14 @@ ShellCraft.prototype.cli = function (callback) {
   program.parse (process.argv);
 };
 
+ShellCraft.prototype.shutdown = function (callback) {
+  this.extensions.forEach (function (extension) {
+    extension.unregister ();
+  });
+
+  callback ();
+};
+
 /**
  * Register external commands.
  *
@@ -283,11 +292,15 @@ ShellCraft.prototype.cli = function (callback) {
  */
 ShellCraft.prototype.registerExtension = function (shellExt) {
   var self = this;
-  var extension = require (shellExt);
+  var ext = require (shellExt);
 
-  extension.forEach (function (cmd) {
-    self.commands._add (cmd.name, new Command (cmd.handler, cmd.params, cmd.desc));
+  ext.register (function (extension) {
+    extension.forEach (function (cmd) {
+      self.commands._add (cmd.name, new Command (cmd.handler, cmd.params, cmd.desc));
+    });
   });
+
+  this.extensions.push (ext);
 };
 
 /**
@@ -297,16 +310,21 @@ ShellCraft.prototype.registerExtension = function (shellExt) {
  * @param {function(results)} callback
  */
 ShellCraft.prototype.begin = function (options, callback) {
+  var self = this;
   this.options = options;
 
   /* Run the Shell. */
   if (process.argv.length === 2) {
-    this.shell (callback);
+    this.shell (function () {
+      self.shutdown (callback);
+    });
     return;
   }
 
   /* Run in command line. */
-  this.cli (callback);
+  this.cli (function () {
+    self.shutdown (callback);
+  });
 };
 
 exports = module.exports = new ShellCraft ();
