@@ -1,0 +1,33 @@
+{
+  "name": "shellcraft",
+  "version": "0.1.0",
+  "description": "Simple shell for Node.js based on commander and inquirer.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Xcraft-Inc/shellcraft.git"
+  },
+  "keywords": [
+    "cli",
+    "command",
+    "commander",
+    "inquirer",
+    "prompt",
+    "shell",
+    "stdin"
+  ],
+  "author": "Mathieu Schroeter <mathieu@schroetersa.ch>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Xcraft-Inc/shellcraft/issues"
+  },
+  "homepage": "https://github.com/Xcraft-Inc/shellcraft",
+  "dependencies": {
+    "async": "^0.9.x",
+    "commander": "2.5.x",
+    "inquirer": "^0.8.x"
+  }
+}
