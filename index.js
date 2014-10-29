@@ -234,6 +234,8 @@ ShellCraft.prototype.cli = function (callback) {
 
   program.version (this.options.version);
 
+  program.option ('');
+
   Object.keys (Object.getPrototypeOf (this.commands)).forEach (function (fct) {
     if (self.commands.hasOwnProperty (fct) || /^_/.test (fct) || self.commands[fct].isBuiltIn ()) {
       return;
