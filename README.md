@@ -1,6 +1,8 @@
 
 # shellcraft.js
 
+IT'S WORK IN PROGRESS, DON'T USE IT IN PROD.
+
 Simple shell for Node.js based on commander and inquirer.
 
 ## Documentation
