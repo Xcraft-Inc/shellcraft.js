@@ -273,7 +273,7 @@ ShellCraft.prototype.cli = function (callback) {
             callback ();
           }
         });
-      }, arg);
+      }, [arg]);
     });
   });
 
