@@ -193,8 +193,8 @@ ShellCraft.prototype.shell = function (callback) {
       var cmd = cmdArgs[0];
       cmdArgs.shift ();
 
-      if (cmd.length && cmd !== history[history.length - 1]) {
-        history.push (cmd);
+      if (cmd.length && answers.command !== history[history.length - 1]) {
+        history.push (answers.command);
       }
       iterator = history.length;
 
