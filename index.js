@@ -43,6 +43,13 @@ Command.prototype.isWizard = function () {
   return this._options.wizard ? true : false;
 };
 
+Command.prototype.params = function () {
+  if (this._options.hasOwnProperty ('params') && this._options.params) {
+    return ' <' + this._options.params + '>';
+  }
+  return '';
+};
+
 Command.prototype.help = function (onlyDesc) {
   var help = '';
   if (!onlyDesc) {
