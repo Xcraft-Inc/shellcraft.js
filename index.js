@@ -18,10 +18,10 @@ function Prompt () {
 /**
  * Command constructor.
  */
-function Command (handler, params, desc) {
+function Command (handler, options, desc) {
   this._parent  = null;
   this._name    = null;
-  this._params  = params;
+  this._options = options;
   this._desc    = desc;
   this._handler = handler;
   return this;
@@ -36,11 +36,11 @@ Command.prototype._setParent = function (parent) {
 };
 
 Command.prototype.isBuiltIn = function () {
-  return this._params.builtIn ? true : false;
+  return this._options.builtIn ? true : false;
 };
 
 Command.prototype.isWizard = function () {
-  return this._params.wizard ? true : false;
+  return this._options.wizard ? true : false;
 };
 
 Command.prototype.help = function (onlyDesc) {
@@ -279,7 +279,7 @@ ShellCraft.prototype.shutdown = function (callback) {
  * [{
  *   name: 'foobar',
  *   desc: 'foobar description',
- *   params: {
+ *   options: {
  *     wizard: false
  *   },
  *   handler: function (callback) {
@@ -298,7 +298,7 @@ ShellCraft.prototype.registerExtension = function (shellExt, callback) {
 
   ext.register (function (extension) {
     extension.forEach (function (cmd) {
-      self.commands._add (cmd.name, new Command (cmd.handler, cmd.params, cmd.desc));
+      self.commands._add (cmd.name, new Command (cmd.handler, cmd.options, cmd.desc));
     });
 
     if (callback ()) {
