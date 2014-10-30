@@ -255,7 +255,9 @@ ShellCraft.prototype.cli = function (callback) {
       return;
     }
 
-    program.option (fct, self.commands[fct].help (true), function (arg) {
+    var params = self.commands[fct].params ();
+
+    program.option (fct + params, self.commands[fct].help (true), function (arg) {
       self.commands[fct].call (function (data, wizardCallback) {
         if (!self.commands[fct].isWizard ()) {
           if (callback) {
