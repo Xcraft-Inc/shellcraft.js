@@ -203,9 +203,14 @@ ShellCraft.prototype.shell = function (callback) {
       try {
         self.commands[cmd].call (function (data, wizardCallback) {
           /* The next prompt we must start the wizard provided by the client. */
-          if (self.commands[cmd].isWizard ()) {
-            inquirerPrompt = data;
-            inquirerCallback = wizardCallback;
+          if (data) {
+            if (self.commands[cmd].isWizard ()) {
+              inquirerPrompt = data;
+              inquirerCallback = wizardCallback;
+            }
+          } else {
+            inquirerPrompt   = self.prompt;
+            inquirerCallback = null;
           }
           next (self.isExit () ? 'good bye' : null);
         }, cmdArgs);
