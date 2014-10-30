@@ -179,10 +179,12 @@ ShellCraft.prototype.shell = function (callback) {
        * this case we must return the answers to the caller.
        */
       if (inquirerCallback) {
-        inquirerCallback (answers);
-        inquirerCallback = null;
-        inquirerPrompt   = self.prompt;
-        next (null);
+        var returnToPrompt = inquirerCallback (answers);
+        if (returnToPrompt) {
+          inquirerCallback = null;
+          inquirerPrompt   = self.prompt;
+          next (null);
+        }
         return;
       }
 
