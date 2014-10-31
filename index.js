@@ -287,8 +287,15 @@ ShellCraft.prototype.cli = function (callback) {
   program.parse (process.argv);
 };
 
+/**
+ * Close the Command Line Interface (CLI) or the shell.
+ *
+ * @api private
+ * @param {function(results)} callback
+ */
 ShellCraft.prototype.shutdown = function (callback) {
   this.extensions.forEach (function (extension) {
+    /* TODO: add sync handling */
     extension.unregister ();
   });
 
