@@ -152,6 +152,8 @@ The callback is called as soon as the extension is registered.
 `myShellExtension.js`
 
 ```javascript
+'use strict';
+
 exports.register = function (callback) {
   var commands = [{
     name    : 'hello',
@@ -171,11 +173,20 @@ exports.register = function (callback) {
       wizard : true
     },
     handler : function (callback, args) {
-      var wizard = {
+      var wizard = [{
         /* Inquirer definition... */
-      };
-      callback (inquirer, function (answers) {
+        type: 'input',
+        name: 'zog',
+        message: 'tell zog'
+      }];
+
+      callback (wizard, function (answers) {
         /* stuff on answers */
+        if (answers.zog === 'zog') {
+          console.log ('zog zog');
+        } else {
+          console.log ('lokthar?');
+        }
 
         /*
          * You can return false if you must provide several wizard with only
@@ -199,11 +210,19 @@ exports.unregister = function () {
 `myShell.js`
 
 ```javascript
-shellcraft.registerExtension ('./myShellExtension.js', function () {
-  shellcraft.begin ({
-    version: '0.0.1',
-    prompt: 'orc>'
-  }, function (msg) {
+'use strict';
+
+var path       = require ('path');
+var shellcraft = require ('../');
+
+var options = {
+  version: '0.0.1',
+  prompt: 'orc>'
+};
+var shellExt = path.join (__dirname, 'myShellExtension.js');
+
+shellcraft.registerExtension (shellExt, function () {
+  shellcraft.begin (options, function (msg) {
     if (msg) {
       console.log (msg);
     }
@@ -216,10 +235,10 @@ shell mode
 $ node myShell.js
 ? orc> _
 ? orc> help
- exit     exit the shell
- help     list of commands
- hello    print Hello, John
- wizard   begins a wizard
+ exit      exit the shell
+ help      list of commands
+ hello     print Hello, John
+ wizard    begins a wizard
 ? orc> hello Tux
 Hello, Tux
 ? orc> exit
