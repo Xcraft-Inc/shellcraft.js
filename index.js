@@ -78,8 +78,9 @@ CommandsList.prototype._helpWidth = function () {
 };
 
 CommandsList.prototype._add = function (cmd, obj) {
-  if (cmd.length > this._helpLength) {
-    this._helpLength = cmd.length;
+  var length = cmd.length + obj.params ().length;
+  if (length > this._helpLength) {
+    this._helpLength = length;
   }
 
   obj._setName (cmd);
