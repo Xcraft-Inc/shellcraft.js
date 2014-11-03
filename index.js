@@ -54,7 +54,8 @@ Command.prototype.help = function (onlyDesc) {
   var help = '';
   if (!onlyDesc) {
     help += ' ' + this._name;
-    help += new Array (this._parent._helpWidth () - this._name.length).join (' ');
+    help += this.params ();
+    help += new Array (this._parent._helpWidth () - help.length).join (' ');
   }
 
   help += this._desc;
