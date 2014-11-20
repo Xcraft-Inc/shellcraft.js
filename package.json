@@ -26,8 +26,8 @@
   },
   "homepage": "https://github.com/Xcraft-Inc/shellcraft",
   "dependencies": {
-    "async": "^0.9.x",
-    "commander": "2.5.x",
-    "inquirer": "^0.8.x"
+    "async": "^0.9.0",
+    "commander": "^2.5.0",
+    "inquirer": "^0.8.0"
   }
 }
