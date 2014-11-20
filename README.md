@@ -241,7 +241,7 @@ shellcraft.registerExtension (shellExt, function () {
 ```
 
 shell mode
-```shell
+```
 $ node myShell.js
 ? orc> _
 ? orc> help
@@ -257,7 +257,7 @@ $ _
 ```
 
 CLI mode
-```shell
+```
 $ node myShell.js -h
 
   Usage: myShell [options] [command]
