@@ -6,10 +6,13 @@ exports.register = function (callback) {
     desc    : 'print Hello, John',
     options : {
       wizard : false,
-      params : 'who'
+      params : {
+        required: 'name',
+        optional: 'etc...'
+      }
     },
     handler : function (callback, args) {
-      console.log ('Hello, ' + args[0]);
+      console.log ('Hello, ' + args.join (' '));
       callback ();
     }
   }, {
