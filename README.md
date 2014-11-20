@@ -109,7 +109,9 @@ $ _
 
 There are two builtin commands `help` and `exit`. For more commands you must
 register one or more extensions. An extension must be "requirable" and must
-export an array of command definitions.
+export two functions (`register()` and `unregister()`).
+An array of command definitions must be passed to the callback of the `register`
+function.
 
 ✤ shellExt
 
@@ -239,7 +241,7 @@ shellcraft.registerExtension (shellExt, function () {
 ```
 
 shell mode
-```
+```shell
 $ node myShell.js
 ? orc> _
 ? orc> help
@@ -255,7 +257,7 @@ $ _
 ```
 
 CLI mode
-```
+```shell
 $ node myShell.js -h
 
   Usage: myShell [options] [command]
