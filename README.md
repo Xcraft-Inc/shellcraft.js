@@ -1,5 +1,6 @@
 
 # shellcraft.js
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/Xcraft-Inc/shellcraft.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 IT'S WORK IN PROGRESS, DON'T USE IT IN PROD.
 
