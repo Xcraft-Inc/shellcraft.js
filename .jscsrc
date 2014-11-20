@@ -1,0 +1,57 @@
+{
+  "requireBlocksOnNewline"                    : true,
+  "requireCamelCaseOrUpperCaseIdentifiers"    : true,
+  "requireCapitalizedConstructors"            : true,
+  "requireCommaBeforeLineBreak"               : true,
+  "requireCurlyBraces"                        : true,
+  "requireDotNotation"                        : true,
+  "requireLineFeedAtFileEnd"                  : true,
+  "requireOperatorBeforeLineBreak"            : true,
+  "requireParenthesesAroundIIFE"              : true,
+
+  "requireSpaceAfterBinaryOperators"          : true,
+  "requireSpaceAfterKeywords"                 : true,
+  "requireSpaceAfterLineComment"              : true,
+
+  "requireSpaceBeforeBinaryOperators"         : true,
+  "requireSpaceBeforeBlockStatements"         : true,
+  "requireSpaceBeforeObjectValues"            : true,
+
+  "requireSpacesInConditionalExpression"      : true,
+  "requireSpacesInFunction": {
+    "beforeOpeningRoundBrace"                 : true,
+    "beforeOpeningCurlyBrace"                 : true
+  },
+
+  "disallowEmptyBlocks"                       : true,
+  "disallowKeywordsOnNewLine"                 : [ "else", "catch" ],
+  "disallowNewlineBeforeBlockStatements"      : true,
+  "disallowPaddingNewlinesInBlocks"           : true,
+  "disallowQuotedKeysInObjects"               : true,
+  "disallowMixedSpacesAndTabs"                : true,
+  "disallowTrailingWhitespace"                : true,
+
+  "disallowSpaceAfterPrefixUnaryOperators"    : true,
+  "disallowSpaceBeforePostfixUnaryOperators"  : true,
+
+  "disallowSpacesInsideArrayBrackets"         : "all",
+  "disallowSpacesInsideObjectBrackets"        : "all",
+
+  "disallowYodaConditions"                    : true,
+
+  "validateIndentation"                       : 2,
+  "validateJSDoc": {
+    "checkParamNames"                         : true,
+    "checkRedundantParams"                    : true,
+    "requireParamTypes"                       : true
+  },
+  "validateLineBreaks"                        : "LF",
+  "validateParameterSeparator"                : ", ",
+  "validateQuoteMarks"                        : "'",
+
+  "maximumLineLength": {
+    "value"                                   : 120,
+    "allowUrlComments"                        : true,
+    "allowRegex"                              : true
+  }
+}
