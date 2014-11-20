@@ -45,7 +45,14 @@ Command.prototype.isWizard = function () {
 
 Command.prototype.params = function () {
   if (this._options.hasOwnProperty ('params') && this._options.params) {
-    return ' <' + this._options.params + '>';
+    var cmd = '';
+    if (this._options.params.hasOwnProperty ('required')) {
+      cmd += ' <' + this._options.params.required + '>';
+    }
+    if (this._options.params.hasOwnProperty ('optional')) {
+      cmd += ' [' + this._options.params.optional + ']';
+    }
+    return cmd;
   }
   return '';
 };
@@ -250,8 +257,6 @@ ShellCraft.prototype.cli = function (callback) {
 
   program.version (this.options.version);
 
-  program.option ('');
-
   Object.keys (Object.getPrototypeOf (this.commands)).forEach (function (fct) {
     if (self.commands.hasOwnProperty (fct) || /^_/.test (fct) || self.commands[fct].isBuiltIn ()) {
       return;
@@ -259,31 +264,47 @@ ShellCraft.prototype.cli = function (callback) {
 
     var params = self.commands[fct].params ();
 
-    program.option (fct + params, self.commands[fct].help (true), function (arg) {
-      self.commands[fct].call (function (data, wizardCallback) {
-        if (data) {
-          if (!self.commands[fct].isWizard ()) {
+    program
+      .command (fct + params)
+      .description (self.commands[fct].help (true))
+      .action (function (first, next) {
+        var values = [];
+
+        if (Array.isArray (first)) {
+          values = values.concat (first);
+        } else if (first && typeof first !== 'object') {
+          values.push (first);
+        }
+        if (Array.isArray (next)) {
+          values = values.concat (next);
+        } else if (next && typeof next !== 'object') {
+          values.push (next);
+        }
+
+        self.commands[fct].call (function (data, wizardCallback) {
+          if (data) {
+            if (!self.commands[fct].isWizard ()) {
+              if (callback) {
+                callback ();
+              }
+              return;
+            }
+          } else {
             if (callback) {
               callback ();
             }
             return;
           }
-        } else {
-          if (callback) {
-            callback ();
-          }
-          return;
-        }
 
-        /* Start the wizard. */
-        inquirer.prompt (data, function (answers) {
-          var returnToPrompt = wizardCallback (answers);
-          if (callback && returnToPrompt) {
-            callback ();
-          }
-        });
-      }, [arg]);
-    });
+          /* Start the wizard. */
+          inquirer.prompt (data, function (answers) {
+            var returnToPrompt = wizardCallback (answers);
+            if (callback && returnToPrompt) {
+              callback ();
+            }
+          });
+        }, values);
+      });
   });
 
   program.parse (process.argv);
