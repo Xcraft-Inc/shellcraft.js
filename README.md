@@ -120,8 +120,13 @@ commands must be described like this:
   name    : 'foo',                        /* command's name without space     */
   desc    : 'foo description',            /* command's description (for help) */
   options : {
-    wizard : false,                        /* when it's need Inquirer          */
-    params : 'argName'                     /* only one argument allows         */
+    wizard : false,                        /* when it's need Inquirer         */
+    params : {
+      required: 'argName',                 /* a required argument             */
+      optional: 'optionals...'             /* several optionals arguments     */
+                                           /* do not append ... in order to   */
+                                           /* limit to one optional argument  */
+    }
   },
   handler : function (callback, args) {
     /*
@@ -133,8 +138,7 @@ commands must be described like this:
      *   The Inquirer answers are retrieved with the second argument.
      *
      * args
-     *   Are the arguments provided with the command. Note that only the first
-     *   argument is correctly handled.
+     *   Are the arguments provided with the command.
      */
   }
 }]
@@ -160,10 +164,13 @@ exports.register = function (callback) {
     desc    : 'print Hello, John',
     options : {
       wizard : false,
-      params : 'who'
+      params : {
+        required: 'name',
+        optional: 'etc...'
+      }
     },
     handler : function (callback, args) {
-      console.log ('Hello, ' + args[0]);
+      console.log ('Hello, ' + args.join (' '));
       callback ();
     }
   }, {
@@ -235,10 +242,10 @@ shell mode
 $ node myShell.js
 ? orc> _
 ? orc> help
- exit      exit the shell
- help      list of commands
- hello     print Hello, John
- wizard    begins a wizard
+ exit                    exit the shell
+ help                    list of commands
+ hello <name> [etc...]   print Hello, John
+ wizard                  begins a wizard
 ? orc> hello Tux
 Hello, Tux
 ? orc> exit
@@ -250,15 +257,17 @@ CLI mode
 ```
 $ node myShell.js -h
 
-  Usage: myShell [options]
+  Usage: myShell [options] [command]
+
+  Commands:
+
+    hello <name> [etc...]  print Hello, John
+    wizard                 begins a wizard
 
   Options:
 
-    -h, --help         output usage information
-    -V, --version      output the version number
-
-    hello <who>        print Hello, John
-    wizard             begins a wizard
+    -h, --help     output usage information
+    -V, --version  output the version number
 
 $ _
 $ node myShell.js hello Alice
