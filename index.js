@@ -356,7 +356,7 @@ ShellCraft.prototype.registerExtension = function (shellExt, callback) {
       self.commands._add (cmd.name, new Command (cmd.handler, cmd.options, cmd.desc));
     });
 
-    if (callback ()) {
+    if (callback) {
       callback ();
     }
   });
