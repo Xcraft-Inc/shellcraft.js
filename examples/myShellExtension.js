@@ -47,23 +47,23 @@ opt.foobar = function (callback, args) {
 
 exports.register = function (callback) {
   var commands = [{
-    name    : 'hello',
-    desc    : 'print Hello, John',
-    options : {
-      wizard : false,
-      params : {
+    name: 'hello',
+    desc: 'print Hello, John',
+    options: {
+      wizard: false,
+      params: {
         required: 'name',
         optional: 'etc...'
       }
     },
-    handler : cmd.hello
+    handler: cmd.hello
   }, {
-    name    : 'wizard',
-    desc    : 'begins a wizard',
-    options : {
-      wizard : true
+    name: 'wizard',
+    desc: 'begins a wizard',
+    options: {
+      wizard: true
     },
-    handler : cmd.wizard
+    handler: cmd.wizard
   }];
 
   var options = [{
