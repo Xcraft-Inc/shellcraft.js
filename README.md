@@ -1,5 +1,5 @@
 
-# shellcraft.js
+# [shellcraft.js](https://www.npmjs.org/package/shellcraft)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/Xcraft-Inc/shellcraft.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Simple shell for Node.js based on [commander](https://www.npmjs.org/package/commander)
