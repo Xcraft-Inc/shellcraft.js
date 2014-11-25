@@ -51,6 +51,7 @@ exports.register = function (callback) {
   callback (null, commands);
 };
 
-exports.unregister = function () {
+exports.unregister = function (callback) {
   /* internal stuff */
+  callback ();
 };
