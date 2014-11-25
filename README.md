@@ -2,9 +2,14 @@
 # shellcraft.js
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/Xcraft-Inc/shellcraft.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-IT'S WORK IN PROGRESS, DON'T USE IT IN PROD.
+Simple shell for Node.js based on [commander](https://www.npmjs.org/package/commander)
+and [inquirer](https://www.npmjs.org/package/inquirer).
 
-Simple shell for Node.js based on commander and inquirer.
+This module provides a way in order to use *commander* and *inquirer* together.
+There are a CLI and a shell mode, and the same commands can be used everywhere.
+
+**shellcraft.js** supports the command history (in shell mode). Note that the
+auto-completion is not yet supported.
 
 ## Documentation
 
@@ -23,9 +28,9 @@ var options = {
   version: '0.1.0'
 };
 
-shellcraft.begin ({}, function (msg) {
-  if (msg) {
-    console.log (msg);
+shellcraft.begin ({}, function (err, results) {
+  if (results) {
+    console.log (results);
   }
 });
 ```
@@ -211,17 +216,17 @@ exports.register = function (callback) {
     desc    : 'begins a wizard',
     options : {
       wizard : true
-      },
-      handler : cmd.wizard
-      }];
+    },
+    handler : cmd.wizard
+  }];
 
-      callback (null, commands);
-    };
+  callback (null, commands);
+};
 
-    exports.unregister = function (callback) {
-      /* internal stuff */
-      callback ();
-    };
+exports.unregister = function (callback) {
+  /* internal stuff */
+  callback ();
+};
 
 ```
 
@@ -247,6 +252,8 @@ shellcraft.registerExtension (shellExt, function () {
   });
 });
 ```
+
+***
 
 shell mode
 ```
