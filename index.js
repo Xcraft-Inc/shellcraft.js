@@ -351,13 +351,15 @@ ShellCraft.prototype.registerExtension = function (shellExt, callback) {
   var self = this;
   var ext = require (shellExt);
 
-  ext.register (function (extension) {
-    extension.forEach (function (cmd) {
-      self.commands._add (cmd.name, new Command (cmd.handler, cmd.options, cmd.desc));
-    });
+  ext.register (function (err, extension) {
+    if (!err) {
+      extension.forEach (function (cmd) {
+        self.commands._add (cmd.name, new Command (cmd.handler, cmd.options, cmd.desc));
+      });
+    }
 
     if (callback) {
-      callback ();
+      callback (err);
     }
   });
 
