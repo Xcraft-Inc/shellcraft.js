@@ -161,27 +161,29 @@ ShellCraft.prototype.shell = function (callback) {
    * Handle command history.
    */
   process.stdin.on ('keypress', function (chunk, key) {
-    if (key) {
-      switch (key.name) {
-      case 'up': {
-        if (iterator > 0) {
-          --iterator;
-        }
-        uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+    if (!key) {
+      return;
+    }
+
+    switch (key.name) {
+    case 'up': {
+      if (iterator > 0) {
+        --iterator;
+      }
+      uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+      uiPrompt.rl.write (history[iterator]);
+      break;
+    }
+    case 'down': {
+      uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+      if (iterator < history.length - 1) {
+        ++iterator;
         uiPrompt.rl.write (history[iterator]);
-        break;
+      } else {
+        iterator = history.length;
       }
-      case 'down': {
-        uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
-        if (iterator < history.length - 1) {
-          ++iterator;
-          uiPrompt.rl.write (history[iterator]);
-        } else {
-          iterator = history.length;
-        }
-        break;
-      }
-      }
+      break;
+    }
     }
   });
 
