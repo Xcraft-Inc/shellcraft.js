@@ -1,9 +1,12 @@
 'use strict';
 
+var zog = 'zog';
+
 var cmd = {};
+var opt = {};
 
 cmd.hello = function (callback, args) {
-  console.log ('Hello, ' + args.join (' '));
+  console.log (zog + ' tells "Hello, ' + args.join (' ') + '"');
   callback ();
 };
 
@@ -12,13 +15,13 @@ cmd.wizard = function (callback) {
     /* Inquirer definition... */
     type: 'input',
     name: 'zog',
-    message: 'tell zog'
+    message: 'tell ' + zog
   }];
 
   callback (wizard, function (answers) {
     /* stuff on answers */
-    if (answers.zog === 'zog') {
-      console.log ('zog zog');
+    if (answers.zog === zog) {
+      console.log (zog + ' ' + zog);
     } else {
       console.log ('lokthar?');
     }
@@ -31,6 +34,15 @@ cmd.wizard = function (callback) {
     */
     return true;
   });
+};
+
+opt.foobar = function (callback, args) {
+  if (args) {
+    zog = args[0];
+  } else {
+    zog = 'lokthar';
+  }
+  callback ();
 };
 
 exports.register = function (callback) {
@@ -54,7 +66,18 @@ exports.register = function (callback) {
     handler : cmd.wizard
   }];
 
-  callback (null, commands);
+  var options = [{
+    name: '-f, --foobar',
+    desc: 'zog is foobar',
+    options: {
+      params: {
+        required: 'who'
+      }
+    },
+    handler: opt.foobar
+  }];
+
+  callback (null, commands, options);
 };
 
 exports.unregister = function (callback) {
