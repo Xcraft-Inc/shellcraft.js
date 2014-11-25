@@ -291,7 +291,7 @@ $ node myShell.js
  hello <name> [etc...]   print Hello, John
  wizard                  begins a wizard
 ? orc> hello Tux
-Hello, Tux
+zog tells "Hello, Tux"
 ? orc> exit
 good bye
 $ _
