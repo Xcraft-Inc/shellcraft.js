@@ -142,7 +142,7 @@ ShellCraft.prototype.isExit = function () {
  * Start the Shell interface.
  *
  * @api private
- * @param {function(results)} callback
+ * @param {function(err, results)} callback
  */
 ShellCraft.prototype.shell = function (callback) {
   var self = this;
@@ -242,7 +242,7 @@ ShellCraft.prototype.shell = function (callback) {
     });
   }, function (results) {
     if (callback) {
-      callback (results);
+      callback (null, results);
     }
   });
 };
@@ -368,7 +368,7 @@ ShellCraft.prototype.registerExtension = function (shellExt, callback) {
  * Begins the Shell or the CLI accordingly to the provided arguments.
  *
  * @param {Object} options
- * @param {function(results)} callback
+ * @param {function(err, results)} callback
  */
 ShellCraft.prototype.begin = function (options, callback) {
   var self = this;
