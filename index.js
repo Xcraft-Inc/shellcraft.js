@@ -1,5 +1,6 @@
 'use strict';
 
+var util     = require ('util');
 var async    = require ('async');
 var inquirer = require ('inquirer');
 
@@ -18,7 +19,7 @@ function Prompt () {
 /**
  * Command constructor.
  */
-function Command (handler, options, desc) {
+function Argument (handler, options, desc) {
   this._parent  = null;
   this._name    = null;
   this._options = options;
@@ -27,23 +28,23 @@ function Command (handler, options, desc) {
   return this;
 }
 
-Command.prototype._setName = function (name) {
+Argument.prototype._setName = function (name) {
   this._name = name;
 };
 
-Command.prototype._setParent = function (parent) {
+Argument.prototype._setParent = function (parent) {
   this._parent = parent;
 };
 
-Command.prototype.isBuiltIn = function () {
+Argument.prototype.isBuiltIn = function () {
   return this._options.builtIn ? true : false;
 };
 
-Command.prototype.isWizard = function () {
+Argument.prototype.isWizard = function () {
   return this._options.wizard ? true : false;
 };
 
-Command.prototype.params = function () {
+Argument.prototype.params = function () {
   if (this._options.hasOwnProperty ('params') && this._options.params) {
     var cmd = '';
     if (this._options.params.hasOwnProperty ('required')) {
@@ -57,7 +58,7 @@ Command.prototype.params = function () {
   return '';
 };
 
-Command.prototype.help = function (onlyDesc) {
+Argument.prototype.help = function (onlyDesc) {
   var help = '';
   if (!onlyDesc) {
     help += ' ' + this._name;
@@ -69,22 +70,58 @@ Command.prototype.help = function (onlyDesc) {
   return help;
 };
 
-Command.prototype.call = function () {
+Argument.prototype.call = function () {
   return this._handler.apply (this, arguments);
+};
+
+Argument.prototype.type = function () {
+  return 'argument';
+};
+
+/**
+ * Command constructor.
+ */
+
+function Command (handler, options, desc) {
+  Command.super_.apply (this, [handler, options, desc]);
+}
+
+util.inherits (Command, Argument);
+
+Command.prototype.type = function () {
+  return 'command';
+};
+
+/**
+* Option constructor.
+*/
+
+function Option (handler, options, desc) {
+  Option.super_.apply (this, [handler, options, desc]);
+
+  if (options.params && options.params.hasOwnProperty ('optional')) {
+    throw new Error ('optional parameter is not allowed for options');
+  }
+}
+
+util.inherits (Option, Argument);
+
+Option.prototype.type = function () {
+  return 'option';
 };
 
 /**
  * CommandsList constructor.
  */
-function CommandsList () {
+function ArgumentsList () {
   this._helpLength = 0;
 }
 
-CommandsList.prototype._helpWidth = function () {
+ArgumentsList.prototype._helpWidth = function () {
   return this._helpLength + 5;
 };
 
-CommandsList.prototype._add = function (cmd, obj) {
+ArgumentsList.prototype._add = function (cmd, obj) {
   var length = cmd.length + obj.params ().length;
   if (length > this._helpLength) {
     this._helpLength = length;
@@ -92,7 +129,7 @@ CommandsList.prototype._add = function (cmd, obj) {
 
   obj._setName (cmd);
   obj._setParent (this);
-  CommandsList.prototype[cmd] = obj;
+  ArgumentsList.prototype[cmd] = obj;
 };
 
 /**
@@ -102,18 +139,21 @@ function ShellCraft () {
   var self = this;
 
   this._exit = false;
+  this._shell = true; /* open the shell be default */
 
-  this.commands = new CommandsList ();
-  this.commands._add ('exit', new Command (function (callback) {
+  this.arguments = new ArgumentsList ();
+  this.arguments._add ('exit', new Command (function (callback) {
     self._exit = true;
     if (callback) {
       callback ();
     }
   }, {builtIn: true}, 'exit the shell'));
-  this.commands._add ('help', new Command (function (callback) {
-    Object.keys (Object.getPrototypeOf (self.commands)).forEach (function (fct) {
-      if (!self.commands.hasOwnProperty (fct) && !/^_/.test(fct)) {
-        console.log (self.commands[fct].help ());
+  this.arguments._add ('help', new Command (function (callback) {
+    Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
+      if (!self.arguments.hasOwnProperty (fct) &&
+          !/^_/.test(fct) &&
+          self.arguments[fct].type () === 'command') {
+        console.log (self.arguments[fct].help ());
       }
     });
     if (callback) {
@@ -219,10 +259,14 @@ ShellCraft.prototype.shell = function (callback) {
       iterator = history.length;
 
       try {
-        self.commands[cmd].call (function (data, wizardCallback) {
+        if (self.arguments[cmd].type () === 'option') {
+          throw new Error ();
+        }
+
+        self.arguments[cmd].call (function (data, wizardCallback) {
           /* The next prompt we must start the wizard provided by the client. */
           if (data) {
-            if (self.commands[cmd].isWizard ()) {
+            if (self.arguments[cmd].isWizard ()) {
               inquirerPrompt = data;
               inquirerCallback = wizardCallback;
             }
@@ -259,17 +303,35 @@ ShellCraft.prototype.cli = function (callback) {
 
   program.version (this.options.version);
 
-  Object.keys (Object.getPrototypeOf (this.commands)).forEach (function (fct) {
-    if (self.commands.hasOwnProperty (fct) || /^_/.test (fct) || self.commands[fct].isBuiltIn ()) {
+  Object.keys (Object.getPrototypeOf (this.arguments)).forEach (function (fct) {
+    if (self.arguments.hasOwnProperty (fct) || /^_/.test (fct) || self.arguments[fct].isBuiltIn ()) {
       return;
     }
 
-    var params = self.commands[fct].params ();
+    var params = self.arguments[fct].params ();
+
+    if (self.arguments[fct].type () === 'option') {
+      program
+        .option (fct + params,
+                 self.arguments[fct].help (true),
+                 function () {
+                   var args = arguments;
+
+                   /* We force to only one argument with the options. */
+                   if (args.length > 1) {
+                     args = [args[0]];
+                   }
+                   self.arguments[fct].call (function () {}, args);
+                 });
+      return;
+    }
 
     program
       .command (fct + params)
-      .description (self.commands[fct].help (true))
+      .description (self.arguments[fct].help (true))
       .action (function (first, next) {
+        self._shell = false;
+
         var values = [];
 
         if (Array.isArray (first)) {
@@ -283,33 +345,28 @@ ShellCraft.prototype.cli = function (callback) {
           values.push (next);
         }
 
-        self.commands[fct].call (function (data, wizardCallback) {
+        self.arguments[fct].call (function (data, wizardCallback) {
           if (data) {
-            if (!self.commands[fct].isWizard ()) {
-              if (callback) {
-                callback ();
-              }
+            if (!self.arguments[fct].isWizard ()) {
               return;
             }
           } else {
-            if (callback) {
-              callback ();
-            }
             return;
           }
 
           /* Start the wizard. */
           inquirer.prompt (data, function (answers) {
-            var returnToPrompt = wizardCallback (answers);
-            if (callback && returnToPrompt) {
-              callback ();
-            }
+            wizardCallback (answers);
           });
         }, values);
       });
   });
 
   program.parse (process.argv);
+
+  if (callback) {
+    callback ();
+  }
 };
 
 /**
@@ -350,10 +407,14 @@ ShellCraft.prototype.registerExtension = function (shellExt, callback) {
   var self = this;
   var ext = require (shellExt);
 
-  ext.register (function (err, extension) {
+  ext.register (function (err, commands, options) {
     if (!err) {
-      extension.forEach (function (cmd) {
-        self.commands._add (cmd.name, new Command (cmd.handler, cmd.options, cmd.desc));
+      commands.forEach (function (cmd) {
+        self.arguments._add (cmd.name, new Command (cmd.handler, cmd.options, cmd.desc));
+      });
+
+      options.forEach (function (opt) {
+        self.arguments._add (opt.name, new Option (opt.handler, opt.options, opt.desc));
       });
     }
 
@@ -375,17 +436,16 @@ ShellCraft.prototype.begin = function (options, callback) {
   var self = this;
   this.options = options;
 
-  /* Run the Shell. */
-  if (process.argv.length === 2) {
-    this.shell (function () {
-      self.shutdown (callback);
-    });
-    return;
-  }
-
   /* Run in command line. */
   this.cli (function () {
-    self.shutdown (callback);
+    if (self._shell) {
+      /* Run the Shell. */
+      self.shell (function () {
+        self.shutdown (callback);
+      });
+    } else {
+      self.shutdown (callback);
+    }
   });
 };
 
