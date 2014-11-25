@@ -48,7 +48,7 @@ exports.register = function (callback) {
     }
   }];
 
-  callback (commands);
+  callback (null, commands);
 };
 
 exports.unregister = function () {
