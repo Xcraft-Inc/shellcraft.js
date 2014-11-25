@@ -316,15 +316,14 @@ ShellCraft.prototype.cli = function (callback) {
  * Close the Command Line Interface (CLI) or the shell.
  *
  * @api private
- * @param {function(results)} callback
+ * @param {function(err)} callback
  */
 ShellCraft.prototype.shutdown = function (callback) {
-  this.extensions.forEach (function (extension) {
-    /* TODO: add sync handling */
-    extension.unregister ();
+  async.each (this.extensions, function (ext, callback) {
+    ext.unregister (callback);
+  }, function (err) {
+    callback (err);
   });
-
-  callback ();
 };
 
 /**
