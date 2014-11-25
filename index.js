@@ -409,13 +409,17 @@ ShellCraft.prototype.registerExtension = function (shellExt, callback) {
 
   ext.register (function (err, commands, options) {
     if (!err) {
-      commands.forEach (function (cmd) {
-        self.arguments._add (cmd.name, new Command (cmd.handler, cmd.options, cmd.desc));
-      });
+      if (commands) {
+        commands.forEach (function (cmd) {
+          self.arguments._add (cmd.name, new Command (cmd.handler, cmd.options, cmd.desc));
+        });
+      }
 
-      options.forEach (function (opt) {
-        self.arguments._add (opt.name, new Option (opt.handler, opt.options, opt.desc));
-      });
+      if (options) {
+        options.forEach (function (opt) {
+          self.arguments._add (opt.name, new Option (opt.handler, opt.options, opt.desc));
+        });
+      }
     }
 
     if (callback) {
