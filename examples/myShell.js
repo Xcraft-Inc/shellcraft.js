@@ -10,9 +10,9 @@ var options = {
 var shellExt = path.join (__dirname, 'myShellExtension.js');
 
 shellcraft.registerExtension (shellExt, function () {
-  shellcraft.begin (options, function (msg) {
-    if (msg) {
-      console.log (msg);
+  shellcraft.begin (options, function (err, results) {
+    if (results) {
+      console.log (results);
     }
   });
 });
