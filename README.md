@@ -121,16 +121,18 @@ function.
 ✤ shellExt
 
 The path on the `.js` file where the definitions are exported. The array of
-commands must be described like this:
+commands and options must be described like this:
 
 ```javascript
 [{
   name    : 'foo',                        /* command's name without space     */
   desc    : 'foo description',            /* command's description (for help) */
   options : {
+    /* wizard makes no sense for `options`                                    */
     wizard : false,                        /* when it's need Inquirer         */
     params : {
       required: 'argName',                 /* a required argument             */
+      /* optional is not available for `options`                              */
       optional: 'optionals...'             /* several optionals arguments     */
                                            /* do not append ... in order to   */
                                            /* limit to one optional argument  */
@@ -144,9 +146,11 @@ commands must be described like this:
      *   in the shell (or the CLI). Otherwise you must call the callback without
      *   arguments.
      *   The Inquirer answers are retrieved with the second argument.
+     *   NOTE: for options, the callback has no effect.
      *
      * args
      *   Are the arguments provided with the command.
+     *   NOTE: for options, this array can not have more than one element.
      */
   }
 }]
@@ -166,10 +170,13 @@ The callback is called as soon as the extension is registered.
 ```javascript
 'use strict';
 
+var zog = 'zog';
+
 var cmd = {};
+var opt = {};
 
 cmd.hello = function (callback, args) {
-  console.log ('Hello, ' + args.join (' '));
+  console.log (zog + ' tells "Hello, ' + args.join (' ') + '"');
   callback ();
 };
 
@@ -178,13 +185,13 @@ cmd.wizard = function (callback) {
     /* Inquirer definition... */
     type: 'input',
     name: 'zog',
-    message: 'tell zog'
+    message: 'tell ' + zog
   }];
 
   callback (wizard, function (answers) {
     /* stuff on answers */
-    if (answers.zog === 'zog') {
-      console.log ('zog zog');
+    if (answers.zog === zog) {
+      console.log (zog + ' ' + zog);
     } else {
       console.log ('lokthar?');
     }
@@ -199,35 +206,54 @@ cmd.wizard = function (callback) {
   });
 };
 
+opt.foobar = function (callback, args) {
+  if (args) {
+    zog = args[0];
+  } else {
+    zog = 'lokthar';
+  }
+  callback ();
+};
+
 exports.register = function (callback) {
   var commands = [{
-    name    : 'hello',
-    desc    : 'print Hello, John',
-    options : {
-      wizard : false,
-      params : {
+    name: 'hello',
+    desc: 'print Hello, John',
+    options: {
+      wizard: false,
+      params: {
         required: 'name',
         optional: 'etc...'
       }
     },
-    handler : cmd.hello
+    handler: cmd.hello
   }, {
-    name    : 'wizard',
-    desc    : 'begins a wizard',
-    options : {
-      wizard : true
+    name: 'wizard',
+    desc: 'begins a wizard',
+    options: {
+      wizard: true
     },
-    handler : cmd.wizard
+    handler: cmd.wizard
   }];
 
-  callback (null, commands);
+  var options = [{
+    name: '-f, --foobar',
+    desc: 'zog is foobar',
+    options: {
+      params: {
+        required: 'who'
+      }
+    },
+    handler: opt.foobar
+  }];
+
+  callback (null, commands, options);
 };
 
 exports.unregister = function (callback) {
   /* internal stuff */
   callback ();
 };
-
 ```
 
 `myShell.js`
@@ -284,12 +310,15 @@ $ node myShell.js -h
 
   Options:
 
-    -h, --help     output usage information
-    -V, --version  output the version number
+    -h, --help          output usage information
+    -V, --version       output the version number
+    -f, --foobar <who>  zog is foobar
 
 $ _
 $ node myShell.js hello Alice
-Hello, Alice
+zog tells "Hello, Alice"
+$ node myShell.js -f Bob hello Alice
+Bob tells "Hello, Alice"
 $ _
 ```
 
