@@ -224,26 +224,40 @@ ShellCraft.prototype.shell = function (callback) {
     }
     /* Command auto-completion */
     case 'tab': {
-      if (!uiPrompt.rl.line.length) {
-        break;
-      }
-
-      var cmd = '';
-      var found = Object.keys (Object.getPrototypeOf (self.arguments)).some (function (fct) {
-        if (self.arguments.hasOwnProperty (fct) || /^_/.test (fct)) {
-          return false;
+      var cmdList = [];
+      Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
+        if (self.arguments.hasOwnProperty (fct) ||
+            /^_/.test (fct) ||
+            self.arguments[fct].type () !== 'command') {
+          return;
         }
-
-        var res = new RegExp ('^' + uiPrompt.rl.line).test (fct);
-        if (res) {
-          cmd = fct;
-        }
-        return res;
+        cmdList.push (fct);
       });
 
-      if (found) {
+      var cmd = [];
+      if (uiPrompt.rl.line.length) {
+        cmdList.forEach (function (fct) {
+          var res = new RegExp ('^' + uiPrompt.rl.line).test (fct);
+          if (res) {
+            cmd.push (fct);
+          }
+        });
+      }
+
+      if (cmd.length === 1) {
         uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
-        uiPrompt.rl.write (cmd);
+        uiPrompt.rl.write (cmd[0]);
+        break;
+      } else {
+        if (!cmd.length) {
+          cmd = cmdList;
+        }
+        var line = uiPrompt.rl.line;
+        uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+        console.log ('\n' + cmd.join (' ') + '\n');
+        uiPrompt.rl.prompt ();
+        uiPrompt.rl.write (line);
+        break;
       }
       break;
     }
