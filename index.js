@@ -226,12 +226,15 @@ ShellCraft.prototype.shell = function (callback) {
     case 'tab': {
       var minLength = 0;
       var cmdList = [];
+
+      /* Extract only the commands (ignore builtin and options). */
       Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
         if (self.arguments.hasOwnProperty (fct) ||
             /^_/.test (fct) ||
             self.arguments[fct].type () !== 'command') {
           return;
         }
+
         if (fct.length > minLength) {
           minLength = fct.length;
         }
@@ -249,16 +252,21 @@ ShellCraft.prototype.shell = function (callback) {
       }
 
       if (cmd.length === 1) {
+        /* Simple auto-complete (one command). */
         uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
         uiPrompt.rl.write (cmd[0]);
         break;
       } else {
+        /* Show all commands if empty. */
         if (!cmd.length) {
           cmd = cmdList;
         }
+
         var line = uiPrompt.rl.line;
         uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+
         cmd.forEach (function (fct, index) {
+          /* Append spaces for vert-align in the dump. */
           cmd[index] = fct + new Array (minLength - fct.length + 1).join (' ');
 
           /* Detect the smaller common string between all commands. */
@@ -267,6 +275,7 @@ ShellCraft.prototype.shell = function (callback) {
             line = fct;
           }
         });
+
         console.log ('\n' + cmd.join (' ') + '\n');
         uiPrompt.rl.prompt ();
         uiPrompt.rl.write (line);
