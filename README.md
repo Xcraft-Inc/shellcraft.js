@@ -8,8 +8,8 @@ and [inquirer](https://www.npmjs.org/package/inquirer).
 This module provides a way in order to use *commander* and *inquirer* together.
 There are a CLI and a shell mode, and the same commands can be used everywhere.
 
-**shellcraft.js** supports the command history (in shell mode). Note that the
-auto-completion is not yet supported.
+**shellcraft.js** supports the command history and the auto-completion (in shell
+mode).
 
 ## Documentation
 
@@ -28,7 +28,7 @@ var options = {
   version: '0.1.0'
 };
 
-shellcraft.begin ({}, function (err, results) {
+shellcraft.begin (options, function (err, results) {
   if (results) {
     console.log (results);
   }
