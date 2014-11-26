@@ -227,7 +227,7 @@ ShellCraft.prototype.shell = function (callback) {
       var minLength = 0;
       var cmdList = [];
 
-      /* Extract only the commands (ignore builtin and options). */
+      /* Extract only the commands (ignore private and options). */
       Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
         if (self.arguments.hasOwnProperty (fct) ||
             /^_/.test (fct) ||
