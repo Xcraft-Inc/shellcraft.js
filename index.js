@@ -224,12 +224,16 @@ ShellCraft.prototype.shell = function (callback) {
     }
     /* Command auto-completion */
     case 'tab': {
+      var minLength = 0;
       var cmdList = [];
       Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
         if (self.arguments.hasOwnProperty (fct) ||
             /^_/.test (fct) ||
             self.arguments[fct].type () !== 'command') {
           return;
+        }
+        if (fct.length > minLength) {
+          minLength = fct.length;
         }
         cmdList.push (fct);
       });
@@ -254,6 +258,9 @@ ShellCraft.prototype.shell = function (callback) {
         }
         var line = uiPrompt.rl.line;
         uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+        cmd.forEach (function (fct, index) {
+          cmd[index] = fct + new Array (minLength - fct.length + 1).join (' ');
+        });
         console.log ('\n' + cmd.join (' ') + '\n');
         uiPrompt.rl.prompt ();
         uiPrompt.rl.write (line);
