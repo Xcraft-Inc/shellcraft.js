@@ -260,6 +260,12 @@ ShellCraft.prototype.shell = function (callback) {
         uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
         cmd.forEach (function (fct, index) {
           cmd[index] = fct + new Array (minLength - fct.length + 1).join (' ');
+
+          /* Detect the smaller common string between all commands. */
+          while (index < cmd.length - 1 && !new RegExp ('^' + fct).test (cmd[index + 1])) {
+            fct = fct.slice (0, -1);
+            line = fct;
+          }
         });
         console.log ('\n' + cmd.join (' ') + '\n');
         uiPrompt.rl.prompt ();
