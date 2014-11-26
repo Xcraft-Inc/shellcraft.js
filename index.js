@@ -197,15 +197,13 @@ ShellCraft.prototype.shell = function (callback) {
   process.stdin.setRawMode (true);
   var uiPrompt = {};
 
-  /*
-   * Handle command history.
-   */
   process.stdin.on ('keypress', function (chunk, key) {
     if (!key) {
       return;
     }
 
     switch (key.name) {
+    /* Command history */
     case 'up': {
       if (iterator > 0) {
         --iterator;
@@ -221,6 +219,31 @@ ShellCraft.prototype.shell = function (callback) {
         uiPrompt.rl.write (history[iterator]);
       } else {
         iterator = history.length;
+      }
+      break;
+    }
+    /* Command auto-completion */
+    case 'tab': {
+      if (!uiPrompt.rl.line.length) {
+        break;
+      }
+
+      var cmd = '';
+      var found = Object.keys (Object.getPrototypeOf (self.arguments)).some (function (fct) {
+        if (self.arguments.hasOwnProperty (fct) || /^_/.test (fct)) {
+          return false;
+        }
+
+        var res = new RegExp ('^' + uiPrompt.rl.line).test (fct);
+        if (res) {
+          cmd = fct;
+        }
+        return res;
+      });
+
+      if (found) {
+        uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+        uiPrompt.rl.write (cmd);
       }
       break;
     }
