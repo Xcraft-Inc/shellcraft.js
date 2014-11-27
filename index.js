@@ -202,7 +202,8 @@ ShellCraft.prototype.cli = function (callback) {
 
     var params = self.arguments[fct].params ();
 
-    if (self.arguments[fct].type () === 'option') {
+    switch (self.arguments[fct].type ()) {
+    case 'option': {
       program
         .option (fct + params,
                  self.arguments[fct].help (true),
@@ -217,41 +218,49 @@ ShellCraft.prototype.cli = function (callback) {
                  });
       return;
     }
+    case 'command': {
+      program
+        .command (fct + params)
+        .description (self.arguments[fct].help (true))
+        .action (function (first, next) {
+          self._shell = false;
 
-    program
-      .command (fct + params)
-      .description (self.arguments[fct].help (true))
-      .action (function (first, next) {
-        self._shell = false;
+          var values = [];
 
-        var values = [];
-
-        if (Array.isArray (first)) {
-          values = values.concat (first);
-        } else if (first && typeof first !== 'object') {
-          values.push (first);
-        }
-        if (Array.isArray (next)) {
-          values = values.concat (next);
-        } else if (next && typeof next !== 'object') {
-          values.push (next);
-        }
-
-        self.arguments[fct].call (function (data, wizardCallback) {
-          if (data) {
-            if (!self.arguments[fct].isWizard ()) {
-              return;
-            }
-          } else {
-            return;
+          if (Array.isArray (first)) {
+            values = values.concat (first);
+          } else if (first && typeof first !== 'object') {
+            values.push (first);
+          }
+          if (Array.isArray (next)) {
+            values = values.concat (next);
+          } else if (next && typeof next !== 'object') {
+            values.push (next);
           }
 
-          /* Start the wizard. */
-          inquirer.prompt (data, function (answers) {
-            wizardCallback (answers);
-          });
-        }, values);
-      });
+          self.arguments[fct].call (function (data, wizardCallback) {
+            if (data) {
+              if (!self.arguments[fct].isWizard ()) {
+                return;
+              }
+            } else {
+              return;
+            }
+
+            /* Start the wizard. */
+            inquirer.prompt (data, function (answers) {
+              wizardCallback (answers);
+            });
+          }, values);
+        });
+      return;
+    }
+    default: {
+      callback ('item ' + fct + ' is ' + self.arguments[fct].type () +
+                ' but a command or an option was expected');
+      return;
+    }
+    }
   });
 
   program.parse (process.argv);
