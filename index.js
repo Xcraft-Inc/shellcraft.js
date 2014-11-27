@@ -155,6 +155,12 @@ ShellCraft.prototype.shell = function (callback) {
           throw new Error ();
         }
 
+        /* Check for required argument. */
+        var required = self.arguments[cmd].hasRequired ();
+        if (required && (!cmdArgs.length || !cmdArgs[0].length)) {
+          throw new Error ('missing required argument `' + required + '\'');
+        }
+
         self.arguments[cmd].call (function (data, wizardCallback) {
           /* The next prompt we must start the wizard provided by the client. */
           if (data) {
