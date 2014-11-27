@@ -1,6 +1,6 @@
 {
   "name": "shellcraft",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Simple shell for Node.js based on commander and inquirer.",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,7 @@
     "command",
     "commander",
     "inquirer",
+    "option",
     "prompt",
     "shell",
     "stdin"
