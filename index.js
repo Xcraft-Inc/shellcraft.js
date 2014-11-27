@@ -133,6 +133,81 @@ ArgumentsList.prototype._add = function (cmd, obj) {
 };
 
 /**
+ * AutoComplete constructor.
+ */
+function AutoComplete (shellcraft) {
+  this.minLength = 0;
+  this.cmdList   = [];
+  this.sc        = shellcraft;
+
+  this.reload ();
+}
+
+AutoComplete.prototype.reload = function () {
+  var self = this;
+
+  self.cmdList = [];
+
+  /* Extract only the commands (ignore private and options). */
+  Object.keys (Object.getPrototypeOf (self.sc.arguments)).forEach (function (fct) {
+    if (self.sc.arguments.hasOwnProperty (fct) ||
+        /^_/.test (fct) ||
+        self.sc.arguments[fct].type () !== 'command') {
+      return;
+    }
+
+    if (fct.length > self.minLength) {
+      self.minLength = fct.length;
+    }
+    self.cmdList.push (fct);
+  });
+};
+
+AutoComplete.prototype.begin = function () {
+  var self = this;
+
+  var cmd = [];
+  if (self.sc.uiPrompt.rl.line.length) {
+    self.cmdList.forEach (function (fct) {
+      var res = new RegExp ('^' + self.sc.uiPrompt.rl.line).test (fct);
+      if (res) {
+        cmd.push (fct);
+      }
+    });
+  }
+
+  if (cmd.length === 1) {
+    /* Simple auto-complete (one command). */
+    self.sc.uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+    self.sc.uiPrompt.rl.write (cmd[0]);
+    return;
+  }
+
+  /* Show all commands if empty. */
+  if (!cmd.length) {
+    cmd = self.cmdList;
+  }
+
+  var line = self.sc.uiPrompt.rl.line;
+  self.sc.uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+
+  cmd.forEach (function (fct, index) {
+    /* Append spaces for vert-align in the dump. */
+    cmd[index] = fct + new Array (self.minLength - fct.length + 1).join (' ');
+
+    /* Detect the smaller common string between all commands. */
+    while (index < cmd.length - 1 && !new RegExp ('^' + fct).test (cmd[index + 1])) {
+      fct = fct.slice (0, -1);
+      line = fct;
+    }
+  });
+
+  console.log ('\n' + cmd.join (' ') + '\n');
+  self.sc.uiPrompt.rl.prompt ();
+  self.sc.uiPrompt.rl.write (line);
+};
+
+/**
  * ShellCraft constructor.
  */
 function ShellCraft () {
@@ -195,7 +270,8 @@ ShellCraft.prototype.shell = function (callback) {
   var iterator = 0;
 
   process.stdin.setRawMode (true);
-  var uiPrompt = {};
+  self.uiPrompt     = {};
+  self.autocomplete = new AutoComplete (self);
 
   process.stdin.on ('keypress', function (chunk, key) {
     if (!key) {
@@ -208,15 +284,15 @@ ShellCraft.prototype.shell = function (callback) {
       if (iterator > 0) {
         --iterator;
       }
-      uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
-      uiPrompt.rl.write (history[iterator]);
+      self.uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+      self.uiPrompt.rl.write (history[iterator]);
       break;
     }
     case 'down': {
-      uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
+      self.uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
       if (iterator < history.length - 1) {
         ++iterator;
-        uiPrompt.rl.write (history[iterator]);
+        self.uiPrompt.rl.write (history[iterator]);
       } else {
         iterator = history.length;
       }
@@ -224,63 +300,7 @@ ShellCraft.prototype.shell = function (callback) {
     }
     /* Command auto-completion */
     case 'tab': {
-      var minLength = 0;
-      var cmdList = [];
-
-      /* Extract only the commands (ignore private and options). */
-      Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
-        if (self.arguments.hasOwnProperty (fct) ||
-            /^_/.test (fct) ||
-            self.arguments[fct].type () !== 'command') {
-          return;
-        }
-
-        if (fct.length > minLength) {
-          minLength = fct.length;
-        }
-        cmdList.push (fct);
-      });
-
-      var cmd = [];
-      if (uiPrompt.rl.line.length) {
-        cmdList.forEach (function (fct) {
-          var res = new RegExp ('^' + uiPrompt.rl.line).test (fct);
-          if (res) {
-            cmd.push (fct);
-          }
-        });
-      }
-
-      if (cmd.length === 1) {
-        /* Simple auto-complete (one command). */
-        uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
-        uiPrompt.rl.write (cmd[0]);
-        break;
-      } else {
-        /* Show all commands if empty. */
-        if (!cmd.length) {
-          cmd = cmdList;
-        }
-
-        var line = uiPrompt.rl.line;
-        uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
-
-        cmd.forEach (function (fct, index) {
-          /* Append spaces for vert-align in the dump. */
-          cmd[index] = fct + new Array (minLength - fct.length + 1).join (' ');
-
-          /* Detect the smaller common string between all commands. */
-          while (index < cmd.length - 1 && !new RegExp ('^' + fct).test (cmd[index + 1])) {
-            fct = fct.slice (0, -1);
-            line = fct;
-          }
-        });
-
-        console.log ('\n' + cmd.join (' ') + '\n');
-        uiPrompt.rl.prompt ();
-        uiPrompt.rl.write (line);
-        break;
-      }
+      self.autocomplete.begin ();
       break;
     }
     }
@@ -290,7 +310,7 @@ ShellCraft.prototype.shell = function (callback) {
   var inquirerPrompt   = self.prompt;
 
   async.forever (function (next) {
-    uiPrompt = inquirer.prompt (inquirerPrompt, function (answers) {
+    self.uiPrompt = inquirer.prompt (inquirerPrompt, function (answers) {
       /*
        * Special handling when the command returns an Inquirer definition. In
        * this case we must return the answers to the caller.
@@ -486,7 +506,10 @@ ShellCraft.prototype.registerExtension = function (shellExt, callback) {
     }
   });
 
-  this.extensions.push (ext);
+  self.extensions.push (ext);
+  if (self._shell) {
+    self.autocomplete.reload ();
+  }
 };
 
 /**
