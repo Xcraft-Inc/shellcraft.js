@@ -115,30 +115,17 @@ $ _
 There are two builtin commands `help` and `exit`. For more commands you must
 register one or more extensions. An extension must be "requirable" and must
 export two functions (`register()` and `unregister()`).
-An array of command definitions must be passed to the callback of the `register`
-function.
 
 ✤ shellExt
 
-The path on the `.js` file where the definitions are exported. The array of
-commands and options must be described like this:
+The path on the `.js` file where the `register` and `unregister` methods are
+exported. An `extension` argument is passed with the `register` call. This
+object has two methods, `command` and `option`. It looks like the *commander*
+API.
 
 ```javascript
-[{
-  name    : 'foo',                        /* command's name without space     */
-  desc    : 'foo description',            /* command's description (for help) */
-  options : {
-    /* wizard makes no sense for `options`                                    */
-    wizard : false,                        /* when it's need Inquirer         */
-    params : {
-      required: 'argName',                 /* a required argument             */
-      /* optional is not available for `options`                              */
-      optional: 'optionals...'             /* several optionals arguments     */
-                                           /* do not append ... in order to   */
-                                           /* limit to one optional argument  */
-    }
-  },
-  handler : function (callback, args) {
+extension
+  .command ('foo', 'foo description', options, function (callback, args) {
     /*
      * callback (wizard, function (answers) {})
      *   Is called in order to return to the prompt (or end if CLI). The wizard
@@ -146,22 +133,46 @@ commands and options must be described like this:
      *   in the shell (or the CLI). Otherwise you must call the callback without
      *   arguments.
      *   The Inquirer answers are retrieved with the second argument.
-     *   NOTE: for options, the callback has no effect.
      *
      * args
      *   Are the arguments provided with the command.
-     *   NOTE: for options, this array can not have more than one element.
      */
-  }
-}]
+  })
+  .option ('-f, --foo', 'foo description', options, function (callback, args) {
+    /*
+     * callback ()
+     *
+     * args
+     *   This array can not have more than one element.
+     */
+  });
 ```
 
-Your shell extension must provide two methods, `register` and `unregister`
-functions.
+The options can be (for `command`):
+```javascript
+options : {
+  wizard : false,              /* when it's need Inquirer         */
+  params : {
+    required: 'argName',       /* a required argument             */
+    optional: 'optionals...'   /* several optionals arguments     */
+                               /* do not append ... in order to   */
+                               /* limit to one optional argument  */
+  }
+}
+```
+
+The options can be (for `option`):
+```javascript
+options : {
+  params : {
+    required: 'argName',       /* a required argument             */
+  }
+}
+```
 
 ✤ callback ()
 
-The callback is called as soon as the extension is registered.
+The callback must be called as soon as the extension is registered.
 
 ##### Example
 
@@ -215,39 +226,25 @@ opt.foobar = function (callback, args) {
   callback ();
 };
 
-exports.register = function (callback) {
-  var commands = [{
-    name: 'hello',
-    desc: 'print Hello, John',
-    options: {
+exports.register = function (extension, callback) {
+  extension
+    .command ('hello', 'print Hello, John', {
       wizard: false,
       params: {
         required: 'name',
         optional: 'etc...'
       }
-    },
-    handler: cmd.hello
-  }, {
-    name: 'wizard',
-    desc: 'begins a wizard',
-    options: {
+    }, cmd.hello)
+    .command ('wizard', 'begins a wizard', {
       wizard: true
-    },
-    handler: cmd.wizard
-  }];
-
-  var options = [{
-    name: '-f, --foobar',
-    desc: 'zog is foobar',
-    options: {
+    }, cmd.wizard)
+    .option ('-f, --foobar', 'zog is foobar', {
       params: {
         required: 'who'
       }
-    },
-    handler: opt.foobar
-  }];
+    }, opt.foobar);
 
-  callback (null, commands, options);
+  callback ();
 };
 
 exports.unregister = function (callback) {
