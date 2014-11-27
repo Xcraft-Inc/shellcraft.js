@@ -151,8 +151,12 @@ ShellCraft.prototype.shell = function (callback) {
       iterator = history.length;
 
       try {
-        if (self.arguments[cmd].type () === 'option') {
-          throw new Error ();
+        if (!Object.getPrototypeOf (self.arguments).hasOwnProperty (cmd) || /^_/.test (cmd)) {
+          throw new Error ('command ' + cmd + ' unknown');
+        }
+
+        if (self.arguments[cmd].type () !== 'command') {
+          throw new Error (cmd + ' is not a command');
         }
 
         /* Check for required argument. */
@@ -175,10 +179,7 @@ ShellCraft.prototype.shell = function (callback) {
           next (self.isExit () ? 'good bye' : null);
         }, cmdArgs);
       } catch (ex) {
-        if (answers.command.length) {
-          console.log ('command ' + cmd + ' unknown');
-        }
-
+        console.log (ex.message);
         next (null);
       }
     });
