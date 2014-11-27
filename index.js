@@ -279,6 +279,7 @@ ShellCraft.prototype.shutdown = function (callback) {
  * Register external commands.
  *
  * @param {string} shellExt - Path on the shell extension file.
+ * @param {function(err)} callback
  */
 ShellCraft.prototype.registerExtension = function (shellExt, callback) {
   var self = this;
