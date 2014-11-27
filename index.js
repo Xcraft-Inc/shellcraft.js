@@ -203,7 +203,7 @@ ShellCraft.prototype.cli = function (callback) {
   program.version (self.options.version);
 
   Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
-    if (self.arguments.hasOwnProperty (fct) || /^_/.test (fct) || self.arguments[fct].isBuiltIn ()) {
+    if (/^_/.test (fct) || self.arguments[fct].isBuiltIn ()) {
       return;
     }
 
