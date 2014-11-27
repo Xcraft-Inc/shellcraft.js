@@ -1,9 +1,9 @@
 'use strict';
 
-var util     = require ('util');
 var async    = require ('async');
 var inquirer = require ('inquirer');
 
+var Command  = require ('./lib/command.js');
 
 /**
  * Prompt constructor.
@@ -17,201 +17,12 @@ function Prompt () {
 }
 
 /**
- * Command constructor.
- */
-function Argument (handler, options, desc) {
-  this._parent  = null;
-  this._name    = null;
-  this._options = options;
-  this._desc    = desc;
-  this._handler = handler;
-  return this;
-}
-
-Argument.prototype._setName = function (name) {
-  this._name = name;
-};
-
-Argument.prototype._setParent = function (parent) {
-  this._parent = parent;
-};
-
-Argument.prototype.isBuiltIn = function () {
-  return this._options.builtIn ? true : false;
-};
-
-Argument.prototype.isWizard = function () {
-  return this._options.wizard ? true : false;
-};
-
-Argument.prototype.params = function () {
-  if (this._options.hasOwnProperty ('params') && this._options.params) {
-    var cmd = '';
-    if (this._options.params.hasOwnProperty ('required')) {
-      cmd += ' <' + this._options.params.required + '>';
-    }
-    if (this._options.params.hasOwnProperty ('optional')) {
-      cmd += ' [' + this._options.params.optional + ']';
-    }
-    return cmd;
-  }
-  return '';
-};
-
-Argument.prototype.help = function (onlyDesc) {
-  var help = '';
-  if (!onlyDesc) {
-    help += ' ' + this._name;
-    help += this.params ();
-    help += new Array (this._parent._helpWidth () - help.length).join (' ');
-  }
-
-  help += this._desc;
-  return help;
-};
-
-Argument.prototype.call = function () {
-  return this._handler.apply (this, arguments);
-};
-
-Argument.prototype.type = function () {
-  return 'argument';
-};
-
-/**
- * Command constructor.
- */
-
-function Command (handler, options, desc) {
-  Command.super_.apply (this, [handler, options, desc]);
-}
-
-util.inherits (Command, Argument);
-
-Command.prototype.type = function () {
-  return 'command';
-};
-
-/**
-* Option constructor.
-*/
-
-function Option (handler, options, desc) {
-  Option.super_.apply (this, [handler, options, desc]);
-
-  if (options.params && options.params.hasOwnProperty ('optional')) {
-    throw new Error ('optional parameter is not allowed for options');
-  }
-}
-
-util.inherits (Option, Argument);
-
-Option.prototype.type = function () {
-  return 'option';
-};
-
-/**
- * CommandsList constructor.
- */
-function ArgumentsList () {
-  this._helpLength = 0;
-}
-
-ArgumentsList.prototype._helpWidth = function () {
-  return this._helpLength + 5;
-};
-
-ArgumentsList.prototype._add = function (cmd, obj) {
-  var length = cmd.length + obj.params ().length;
-  if (length > this._helpLength) {
-    this._helpLength = length;
-  }
-
-  obj._setName (cmd);
-  obj._setParent (this);
-  ArgumentsList.prototype[cmd] = obj;
-};
-
-/**
- * AutoComplete constructor.
- */
-function AutoComplete (shellcraft) {
-  this.minLength = 0;
-  this.cmdList   = [];
-  this.sc        = shellcraft;
-
-  this.reload ();
-}
-
-AutoComplete.prototype.reload = function () {
-  var self = this;
-
-  self.cmdList = [];
-
-  /* Extract only the commands (ignore private and options). */
-  Object.keys (Object.getPrototypeOf (self.sc.arguments)).forEach (function (fct) {
-    if (self.sc.arguments.hasOwnProperty (fct) ||
-        /^_/.test (fct) ||
-        self.sc.arguments[fct].type () !== 'command') {
-      return;
-    }
-
-    if (fct.length > self.minLength) {
-      self.minLength = fct.length;
-    }
-    self.cmdList.push (fct);
-  });
-};
-
-AutoComplete.prototype.begin = function () {
-  var self = this;
-
-  var cmd = [];
-  if (self.sc.uiPrompt.rl.line.length) {
-    self.cmdList.forEach (function (fct) {
-      var res = new RegExp ('^' + self.sc.uiPrompt.rl.line).test (fct);
-      if (res) {
-        cmd.push (fct);
-      }
-    });
-  }
-
-  if (cmd.length === 1) {
-    /* Simple auto-complete (one command). */
-    self.sc.uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
-    self.sc.uiPrompt.rl.write (cmd[0]);
-    return;
-  }
-
-  /* Show all commands if empty. */
-  if (!cmd.length) {
-    cmd = self.cmdList;
-  }
-
-  var line = self.sc.uiPrompt.rl.line;
-  self.sc.uiPrompt.rl.write (null, {ctrl: true, name: 'u'});
-
-  cmd.forEach (function (fct, index) {
-    /* Append spaces for vert-align in the dump. */
-    cmd[index] = fct + new Array (self.minLength - fct.length + 1).join (' ');
-
-    /* Detect the smaller common string between all commands. */
-    while (index < cmd.length - 1 && !new RegExp ('^' + fct).test (cmd[index + 1])) {
-      fct = fct.slice (0, -1);
-      line = fct;
-    }
-  });
-
-  console.log ('\n' + cmd.join (' ') + '\n');
-  self.sc.uiPrompt.rl.prompt ();
-  self.sc.uiPrompt.rl.write (line);
-};
-
-/**
  * ShellCraft constructor.
  */
 function ShellCraft () {
   var self = this;
+
+  var ArgumentsList = require ('./lib/argumentslist.js');
 
   self._exit = false;
   self._shell = true; /* open the shell be default */
@@ -261,6 +72,8 @@ ShellCraft.prototype.isExit = function () {
  */
 ShellCraft.prototype.shell = function (callback) {
   var self = this;
+
+  var AutoComplete = require ('./lib/autocomplete.js');
 
   if (self.options.prompt) {
     self.prompt[0].message = self.options.prompt;
@@ -485,6 +298,8 @@ ShellCraft.prototype.shutdown = function (callback) {
 ShellCraft.prototype.registerExtension = function (shellExt, callback) {
   var self = this;
   var ext = require (shellExt);
+
+  var Option = require ('./lib/option.js');
 
   ext.register (function (err, commands, options) {
     if (!err) {
