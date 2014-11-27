@@ -239,11 +239,7 @@ ShellCraft.prototype.cli = function (callback) {
           }
 
           self.arguments[fct].call (function (data, wizardCallback) {
-            if (data) {
-              if (!self.arguments[fct].isWizard ()) {
-                return;
-              }
-            } else {
+            if (!data || !self.arguments[fct].isWizard ()) {
               return;
             }
 
