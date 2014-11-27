@@ -213,17 +213,17 @@ AutoComplete.prototype.begin = function () {
 function ShellCraft () {
   var self = this;
 
-  this._exit = false;
-  this._shell = true; /* open the shell be default */
+  self._exit = false;
+  self._shell = true; /* open the shell be default */
 
-  this.arguments = new ArgumentsList ();
-  this.arguments._add ('exit', new Command (function (callback) {
+  self.arguments = new ArgumentsList ();
+  self.arguments._add ('exit', new Command (function (callback) {
     self._exit = true;
     if (callback) {
       callback ();
     }
   }, {builtIn: true}, 'exit the shell'));
-  this.arguments._add ('help', new Command (function (callback) {
+  self.arguments._add ('help', new Command (function (callback) {
     Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
       if (!self.arguments.hasOwnProperty (fct) &&
           !/^_/.test(fct) &&
@@ -236,11 +236,11 @@ function ShellCraft () {
     }
   }, {builtIn: true}, 'list of commands'));
 
-  this.options = {
+  self.options = {
     version: '0.0.1'
   };
-  this.prompt  = new Prompt ();
-  this.extensions = [];
+  self.prompt = new Prompt ();
+  self.extensions = [];
 }
 
 /**
@@ -262,8 +262,8 @@ ShellCraft.prototype.isExit = function () {
 ShellCraft.prototype.shell = function (callback) {
   var self = this;
 
-  if (this.options.prompt) {
-    this.prompt[0].message = this.options.prompt;
+  if (self.options.prompt) {
+    self.prompt[0].message = self.options.prompt;
   }
 
   var history = [];
@@ -380,9 +380,9 @@ ShellCraft.prototype.cli = function (callback) {
   var self = this;
   var program = require ('commander');
 
-  program.version (this.options.version);
+  program.version (self.options.version);
 
-  Object.keys (Object.getPrototypeOf (this.arguments)).forEach (function (fct) {
+  Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
     if (self.arguments.hasOwnProperty (fct) || /^_/.test (fct) || self.arguments[fct].isBuiltIn ()) {
       return;
     }
@@ -520,10 +520,10 @@ ShellCraft.prototype.registerExtension = function (shellExt, callback) {
  */
 ShellCraft.prototype.begin = function (options, callback) {
   var self = this;
-  this.options = options;
+  self.options = options;
 
   /* Run in command line. */
-  this.cli (function () {
+  self.cli (function () {
     if (self._shell) {
       /* Run the Shell. */
       self.shell (function () {
