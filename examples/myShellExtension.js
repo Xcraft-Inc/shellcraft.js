@@ -45,39 +45,25 @@ opt.foobar = function (callback, args) {
   callback ();
 };
 
-exports.register = function (callback) {
-  var commands = [{
-    name: 'hello',
-    desc: 'print Hello, John',
-    options: {
+exports.register = function (extension, callback) {
+  extension
+    .command ('hello', 'print Hello, John', {
       wizard: false,
       params: {
         required: 'name',
         optional: 'etc...'
       }
-    },
-    handler: cmd.hello
-  }, {
-    name: 'wizard',
-    desc: 'begins a wizard',
-    options: {
+    }, cmd.hello)
+    .command ('wizard', 'begins a wizard', {
       wizard: true
-    },
-    handler: cmd.wizard
-  }];
-
-  var options = [{
-    name: '-f, --foobar',
-    desc: 'zog is foobar',
-    options: {
+    }, cmd.wizard)
+    .option ('-f, --foobar', 'zog is foobar', {
       params: {
         required: 'who'
       }
-    },
-    handler: opt.foobar
-  }];
+    }, opt.foobar);
 
-  callback (null, commands, options);
+  callback ();
 };
 
 exports.unregister = function (callback) {
