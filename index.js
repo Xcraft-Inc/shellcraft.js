@@ -278,41 +278,20 @@ ShellCraft.prototype.shutdown = function (callback) {
 /**
  * Register external commands.
  *
- * The module must return an array like this:
- * [{
- *   name: 'foobar',
- *   desc: 'foobar description',
- *   options: {
- *     wizard: false
- *   },
- *   handler: function (callback) {
- *     console.log ('run foobar');
- *     callback ();
- *   }
- * }]
- *
- * The callback function must always be called.
- *
  * @param {string} shellExt - Path on the shell extension file.
  */
 ShellCraft.prototype.registerExtension = function (shellExt, callback) {
   var self = this;
   var ext = require (shellExt);
 
-  var Option = require ('./lib/option.js');
+  var Extension = require ('./lib/extension.js');
+  var extension = new Extension (self);
 
-  ext.register (function (err, commands, options) {
+  ext.register (extension, function (err) {
     if (!err) {
-      if (commands) {
-        commands.forEach (function (cmd) {
-          self.arguments._add (cmd.name, new Command (cmd.handler, cmd.options, cmd.desc));
-        });
-      }
-
-      if (options) {
-        options.forEach (function (opt) {
-          self.arguments._add (opt.name, new Option (opt.handler, opt.options, opt.desc));
-        });
+      self.extensions.push (ext);
+      if (self.autocomplete) {
+        self.autocomplete.reload ();
       }
     }
 
@@ -320,11 +299,6 @@ ShellCraft.prototype.registerExtension = function (shellExt, callback) {
       callback (err);
     }
   });
-
-  self.extensions.push (ext);
-  if (self._shell) {
-    self.autocomplete.reload ();
-  }
 };
 
 /**
