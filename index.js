@@ -141,7 +141,7 @@ ShellCraft.prototype.shell = function (callback) {
       /*
        * Normal shell handling for the commands.
        */
-      var cmdArgs = answers.command.split (' ');
+      var cmdArgs = answers.command.trim ().split (' ');
       var cmd = cmdArgs[0];
       cmdArgs.shift ();
 
