@@ -156,7 +156,7 @@ ShellCraft.prototype.shell = function (callback) {
         if (returnToPrompt) {
           inquirerCallback = null;
           inquirerPrompt   = self.prompt;
-          next (null);
+          next ();
         }
         return;
       }
@@ -213,7 +213,7 @@ ShellCraft.prototype.shell = function (callback) {
         if (ex.message.length) {
           console.log (ex.message);
         }
-        next (null);
+        next ();
       }
     });
   }, function (results) {
