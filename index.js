@@ -178,6 +178,10 @@ ShellCraft.prototype.shell = function (callback) {
       iterator = history.length;
 
       try {
+        if (!cmd.length) {
+          throw new Error ();
+        }
+
         if (!Object.getPrototypeOf (self.arguments).hasOwnProperty (cmd) || /^_/.test (cmd)) {
           throw new Error ('command ' + cmd + ' unknown');
         }
@@ -206,7 +210,9 @@ ShellCraft.prototype.shell = function (callback) {
           next (self.isExit () ? 'good bye' : null);
         }, cmdArgs);
       } catch (ex) {
-        console.log (ex.message);
+        if (ex.message.length) {
+          console.log (ex.message);
+        }
         next (null);
       }
     });
