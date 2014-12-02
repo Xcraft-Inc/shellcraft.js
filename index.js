@@ -74,7 +74,7 @@ function ShellCraft () {
     version: '0.0.1'
   };
   self.prompt = new Prompt ();
-  self.extensions = [];
+  self.extensions = {};
 }
 
 /**
@@ -321,8 +321,9 @@ ShellCraft.prototype.cli = function (callback) {
  * @param {function(err)} callback
  */
 ShellCraft.prototype.shutdown = function (callback) {
-  async.each (this.extensions, function (ext, callback) {
-    ext.unregister (callback);
+  var self = this;
+  async.each (Object.keys (self.extensions), function (ext, callback) {
+    self.extensions[ext].unregister (callback);
   }, function (err) {
     callback (err);
   });
@@ -336,14 +337,15 @@ ShellCraft.prototype.shutdown = function (callback) {
  */
 ShellCraft.prototype.registerExtension = function (shellExt, callback) {
   var self = this;
-  var ext = require (shellExt);
+  var path = require ('path');
+  var ext  = require (shellExt);
 
   var Extension = require ('./lib/extension.js');
   var extension = new Extension (self);
 
   ext.register (extension, function (err) {
     if (!err) {
-      self.extensions.push (ext);
+      self.extensions[path.resolve (shellExt)] = ext;
       if (self.autocomplete) {
         self.autocomplete.reload ();
       }
