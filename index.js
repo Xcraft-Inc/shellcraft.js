@@ -235,6 +235,14 @@ ShellCraft.prototype.cli = function (callback) {
 
   program.version (self.options.version);
 
+  program
+    .command ('*')
+    .description ('')
+    .action (function (cmd) {
+      self._shell = false;
+      console.error ('command ' + cmd + ' unknown');
+    });
+
   Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
     if (/^_/.test (fct) || self.arguments[fct].isBuiltIn ()) {
       return;
