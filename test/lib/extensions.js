@@ -31,6 +31,10 @@ exports.register = function (extension, callback) {
     .command ('test3', '', optArgOptional, function (callback, args) {
       args.length.should.be.equal (1);
       callback ();
+    })
+    .command ('test4', '', optArgOptional, function (callback, args) {
+      args[0].should.be.equal ('the argument');
+      callback ();
     });
 
   callback ();

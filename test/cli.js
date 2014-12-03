@@ -64,4 +64,13 @@ describe ('command: test# [arg]', function () {
       done ();
     });
   });
+
+  it ('test4 should retrieve the argument', function (done) {
+    process.argv[2] = 'test4';
+    process.argv[3] = 'the argument';
+
+    runShellCraft (function () {
+      done ();
+    });
+  });
 });
