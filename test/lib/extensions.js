@@ -3,7 +3,7 @@
 var should = require ('should'); /* jshint ignore:line */
 
 exports.register = function (extension, callback) {
-  var options01 = {
+  var optArgRequired = {
     wizard: false,
     params: {
       required: 'arg'
@@ -11,11 +11,11 @@ exports.register = function (extension, callback) {
   };
 
   extension
-    .command ('test0', '', options01, function (callback, args) {
+    .command ('test0', '', optArgRequired, function (callback, args) {
       args[0].should.be.equal ('the argument');
       callback ();
     })
-    .command ('test1', '', options01, function (callback) {
+    .command ('test1', '', optArgRequired, function (callback) {
       callback ();
     });
 
