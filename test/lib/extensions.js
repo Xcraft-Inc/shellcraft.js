@@ -9,6 +9,12 @@ exports.register = function (extension, callback) {
       required: 'arg'
     }
   };
+  var optArgOptional = {
+    wizard: false,
+    params: {
+      optional: 'opt'
+    }
+  };
 
   extension
     .command ('test0', '', optArgRequired, function (callback, args) {
@@ -16,6 +22,14 @@ exports.register = function (extension, callback) {
       callback ();
     })
     .command ('test1', '', optArgRequired, function (callback) {
+      callback ();
+    })
+    .command ('test2', '', optArgOptional, function (callback, args) {
+      args.length.should.be.equal (0);
+      callback ();
+    })
+    .command ('test3', '', optArgOptional, function (callback, args) {
+      args.length.should.be.equal (1);
       callback ();
     });
 

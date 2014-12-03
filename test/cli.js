@@ -44,3 +44,24 @@ describe ('command: test# <arg>', function () {
     done ();
   });
 });
+
+describe ('command: test# [arg]', function () {
+  it ('test2 should not fail if the argument is missing', function (done) {
+    process.argv[2] = 'test2';
+    /* no argument provided to test2... */
+
+    runShellCraft (function () {
+      done ();
+    });
+  });
+
+  it ('test3 should fail if the number of arguments is greater than 1', function (done) {
+    process.argv[2] = 'test3';
+    process.argv[3] = 'arg1';
+    process.argv[4] = 'arg2'; /* this argument should be dropped */
+
+    runShellCraft (function () {
+      done ();
+    });
+  });
+});
