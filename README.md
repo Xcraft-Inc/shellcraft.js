@@ -213,11 +213,11 @@ cmd.wizard = function (callback) {
     }
 
     /*
-    * You can return false if you must provide several wizard with only
-    * one call to this command handler.
-    * You can call callback () without argument in order to return to the
-    * prompt instead of returning true.
-    */
+     * You can return false if you must provide several wizard with only
+     * one call to this command handler.
+     * You can call callback () without argument in order to return to the
+     * prompt instead of returning true.
+     */
     return true;
   });
 };
@@ -307,6 +307,7 @@ $ node myShell.js -h
 
   Commands:
 
+    *
     hello <name> [etc...]  print Hello, John
     wizard                 begins a wizard
 
@@ -328,7 +329,7 @@ $ _
 
 The MIT License (MIT)
 
-Copyright (c) 2014 Xcraft
+Copyright (c) 2014 Xcraft <mathieu@schroetersa.ch>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

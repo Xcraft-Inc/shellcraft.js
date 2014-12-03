@@ -1,6 +1,6 @@
 /* The MIT License (MIT)
  *
- * Copyright (c) 2014 Xcraft
+ * Copyright (c) 2014 Xcraft <mathieu@schroetersa.ch>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -74,7 +74,7 @@ function ShellCraft () {
     version: '0.0.1'
   };
   self.prompt = new Prompt ();
-  self.extensions = [];
+  self.extensions = {};
 }
 
 /**
@@ -235,6 +235,14 @@ ShellCraft.prototype.cli = function (callback) {
 
   program.version (self.options.version);
 
+  program
+    .command ('*')
+    .description ('')
+    .action (function (cmd) {
+      self._shell = false;
+      console.error ('command ' + cmd + ' unknown');
+    });
+
   Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
     if (/^_/.test (fct) || self.arguments[fct].isBuiltIn ()) {
       return;
@@ -313,8 +321,9 @@ ShellCraft.prototype.cli = function (callback) {
  * @param {function(err)} callback
  */
 ShellCraft.prototype.shutdown = function (callback) {
-  async.each (this.extensions, function (ext, callback) {
-    ext.unregister (callback);
+  var self = this;
+  async.each (Object.keys (self.extensions), function (ext, callback) {
+    self.extensions[ext].unregister (callback);
   }, function (err) {
     callback (err);
   });
@@ -328,14 +337,15 @@ ShellCraft.prototype.shutdown = function (callback) {
  */
 ShellCraft.prototype.registerExtension = function (shellExt, callback) {
   var self = this;
-  var ext = require (shellExt);
+  var path = require ('path');
+  var ext  = require (shellExt);
 
   var Extension = require ('./lib/extension.js');
   var extension = new Extension (self);
 
   ext.register (extension, function (err) {
     if (!err) {
-      self.extensions.push (ext);
+      self.extensions[path.resolve (shellExt)] = ext;
       if (self.autocomplete) {
         self.autocomplete.reload ();
       }
