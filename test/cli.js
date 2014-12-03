@@ -15,13 +15,13 @@ process.exit = function (code) {
   throw new Error (code);
 };
 
-describe ('command: test# <arg>', function () {
-  beforeEach (function (done) {
-    delete process.argv;
-    process.argv = ['node', 'test'];
-    done ();
-  });
+beforeEach (function (done) {
+  delete process.argv;
+  process.argv = ['node', 'test'];
+  done ();
+});
 
+describe ('command: test# <arg>', function () {
   it ('test0 should retrieve the argument', function (done) {
     process.argv[2] = 'test0';
     process.argv[3] = 'the argument';
