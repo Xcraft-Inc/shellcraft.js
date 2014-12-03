@@ -5,7 +5,7 @@ var should     = require ('should'); /* jshint ignore:line */
 var shellcraft = require ('../');
 
 var runShellCraft = function (callback) {
-  var ext = path.join (__dirname, 'ext.js');
+  var ext = path.join (__dirname, 'lib/extensions.js');
   shellcraft.registerExtension (ext, function () {
     shellcraft.begin ({}, callback);
   });
