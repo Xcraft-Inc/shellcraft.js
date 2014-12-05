@@ -19,7 +19,8 @@ describe ('command: test# <arg>', function () {
       'the argument'
     ];
 
-    runShellCraft (args, function () {
+    runShellCraft (args, function (code) {
+      code.should.be.equal (0);
       done ();
     });
   });
@@ -39,7 +40,8 @@ describe ('command: test# [arg]', function () {
     var args = ['test2'];
     /* no argument provided to test2... */
 
-    runShellCraft (args, function () {
+    runShellCraft (args, function (code) {
+      code.should.be.equal (0);
       done ();
     });
   });
@@ -51,7 +53,8 @@ describe ('command: test# [arg]', function () {
       'arg2' /* this argument should be dropped */
     ];
 
-    runShellCraft (args, function () {
+    runShellCraft (args, function (code) {
+      code.should.be.equal (0);
       done ();
     });
   });
@@ -62,7 +65,8 @@ describe ('command: test# [arg]', function () {
       'the argument'
     ];
 
-    runShellCraft (args, function () {
+    runShellCraft (args, function (code) {
+      code.should.be.equal (0);
       done ();
     });
   });
