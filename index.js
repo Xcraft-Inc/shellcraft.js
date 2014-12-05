@@ -241,6 +241,9 @@ ShellCraft.prototype.cli = function (callback) {
     .action (function (cmd) {
       self._shell = false;
       console.error ('command ' + cmd + ' unknown');
+      if (callback) {
+        callback ();
+      }
     });
 
   Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
@@ -288,12 +291,18 @@ ShellCraft.prototype.cli = function (callback) {
 
           self.arguments[fct].call (function (data, wizardCallback) {
             if (!data || !self.arguments[fct].isWizard ()) {
+              if (callback) {
+                callback ();
+              }
               return;
             }
 
             /* Start the wizard. */
             inquirer.prompt (data, function (answers) {
-              wizardCallback (answers);
+              var stop = wizardCallback (answers);
+              if (stop && callback) {
+                callback ();
+              }
             });
           }, values);
         });
@@ -309,7 +318,7 @@ ShellCraft.prototype.cli = function (callback) {
 
   program.parse (process.argv);
 
-  if (callback) {
+  if (!program.args.length && callback) {
     callback ();
   }
 };
