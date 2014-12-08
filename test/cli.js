@@ -6,7 +6,7 @@ var should = require ('should'); /* jshint ignore:line */
 var runShellCraft = function (args, callback) {
   var fork = require ('child_process').fork;
 
-  var prog = fork (path.join (__dirname, './sc.js'), args, {silent: true});
+  var prog = fork (path.join (__dirname, './lib/sc.js'), args, {silent: true});
   prog
     .on ('error', callback)
     .on ('close', callback);
