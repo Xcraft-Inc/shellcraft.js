@@ -65,6 +65,9 @@ function ShellCraft () {
         console.log (self.arguments[fct].help ());
       }
     });
+
+    console.log ('');
+
     if (callback) {
       callback ();
     }
