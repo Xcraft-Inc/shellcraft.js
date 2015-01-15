@@ -21,6 +21,9 @@
     "stdin"
   ],
   "author": "Mathieu Schroeter <mathieu@schroetersa.ch>",
+  "contributors": [
+    "Samuel Loup <sam@loup.io>"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Xcraft-Inc/shellcraft/issues"
