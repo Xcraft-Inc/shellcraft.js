@@ -32,11 +32,24 @@ var Command  = require ('./lib/command.js');
  * Prompt constructor.
  */
 function Prompt () {
+  this.scope = '';
+  this.message = '>';
+}
+
+Prompt.prototype.getInquirer = function () {
   return [{
     type    : 'input',
     name    : 'command',
-    message : '>'
+    message : (this.scope && this.scope + ':') + this.message
   }];
+}
+
+Prompt.prototype.setMessage = function (message) {
+  this.message = message;
+}
+
+Prompt.prototype.setScope = function (scope) {
+  this.scope = scope;
 }
 
 /**
@@ -49,6 +62,7 @@ function ShellCraft () {
 
   self._exit = false;
   self._shell = true; /* open the shell be default */
+  self._scope = 'global';
 
   self.arguments = new ArgumentsList ();
   self.arguments._add ('exit', new Command (function (callback) {
@@ -56,12 +70,14 @@ function ShellCraft () {
     if (callback) {
       callback ();
     }
-  }, {builtIn: true}, 'exit the shell'));
+  }, {builtIn: true, scope: '*'}, 'exit the shell'));
+
   self.arguments._add ('help', new Command (function (callback) {
     Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
       if (!self.arguments.hasOwnProperty (fct) &&
           !/^_/.test(fct) &&
-          self.arguments[fct].type () === 'command') {
+          self.arguments[fct].type () === 'command' &&
+          self.arguments[fct].isScoped (self._scope)) {
         console.log (self.arguments[fct].help ());
       }
     });
@@ -71,7 +87,17 @@ function ShellCraft () {
     if (callback) {
       callback ();
     }
-  }, {builtIn: true}, 'list of commands'));
+  }, {builtIn: true, scope: '*'}, 'list of commands'));
+
+  self.arguments._add ('scope', new Command (function (callback, scope) {
+    self._scope = scope[0] || 'global';
+    self.autocomplete.reload ();
+    self.prompt.setScope (self._scope !== 'global' ? scope : '');
+
+    if (callback) {
+      callback ();
+    }
+  }, {builtIn: true, scope: '*'}, 'change scope'));
 
   self.options = {
     version: '0.0.1'
@@ -102,7 +128,7 @@ ShellCraft.prototype.shell = function (callback) {
   var AutoComplete = require ('./lib/autocomplete.js');
 
   if (self.options.prompt) {
-    self.prompt[0].message = self.options.prompt;
+    self.prompt.setMessage (self.options.prompt);
   }
 
   var history = [];
@@ -146,7 +172,7 @@ ShellCraft.prototype.shell = function (callback) {
   });
 
   var inquirerCallback = null;
-  var inquirerPrompt   = self.prompt;
+  var inquirerPrompt   = self.prompt.getInquirer ();
 
   async.forever (function (next) {
     self.uiPrompt = inquirer.prompt (inquirerPrompt, function (answers) {
@@ -158,7 +184,7 @@ ShellCraft.prototype.shell = function (callback) {
         var returnToPrompt = inquirerCallback (answers);
         if (returnToPrompt) {
           inquirerCallback = null;
-          inquirerPrompt   = self.prompt;
+          inquirerPrompt   = self.prompt.getInquirer ();
           next ();
         }
         return;
@@ -189,7 +215,7 @@ ShellCraft.prototype.shell = function (callback) {
           throw new Error ('command ' + cmd + ' unknown');
         }
 
-        if (self.arguments[cmd].type () !== 'command') {
+        if (self.arguments[cmd].type () !== 'command' || !self.arguments[cmd].isScoped (self._scope)) {
           throw new Error (cmd + ' is not a command');
         }
 
@@ -207,7 +233,7 @@ ShellCraft.prototype.shell = function (callback) {
               inquirerCallback = wizardCallback;
             }
           } else {
-            inquirerPrompt   = self.prompt;
+            inquirerPrompt   = self.prompt.getInquirer ();
             inquirerCallback = null;
           }
           next (self.isExit () ? 'good bye' : null);
@@ -250,7 +276,7 @@ ShellCraft.prototype.cli = function (callback) {
     });
 
   Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
-    if (/^_/.test (fct) || self.arguments[fct].isBuiltIn ()) {
+    if (/^_/.test (fct) || self.arguments[fct].isBuiltIn () || !self.arguments[fct].isScoped (self._scope)) {
       return;
     }
 
