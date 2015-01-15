@@ -95,6 +95,7 @@ $ node myShell.js
 ? orc> help
  exit     exit the shell
  help     list of commands
+ scope    change scope
 ? orc> exit
 good bye
 $ _
@@ -158,6 +159,7 @@ The options can be (for `command`):
 options : {
   wizard : false,              /* when it's need Inquirer         */
   params : {
+    scope: 'goblin',           /* override global scope filter    */
     required: 'argName',       /* a required argument             */
     optional: 'optionals...'   /* several optionals arguments     */
                                /* do not append ... in order to   */
@@ -290,6 +292,7 @@ $ node myShell.js
 ? orc> help
  exit                    exit the shell
  help                    list of commands
+ scope                   change scope
  hello <name> [etc...]   print Hello, John
  wizard                  begins a wizard
 ? orc> hello Tux
