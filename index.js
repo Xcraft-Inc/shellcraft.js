@@ -75,7 +75,29 @@ function ShellCraft () {
     if (callback) {
       callback ();
     }
-  }, {builtIn: true, scope: '*'}, 'change scope'));
+  }, {builtIn: true, scope: '*'}, function () {
+    var help = 'change scope';
+    var scopes = [];
+
+    /* Look for all available scopes */
+    Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
+      if (!self.arguments.hasOwnProperty (fct) &&
+        !/^_/.test(fct) &&
+        self.arguments[fct].type () === 'command') {
+        var scope = self.arguments[fct].scope ();
+        if (scope === '*' || scope === 'global') {
+          return;
+        }
+
+        if (scopes.indexOf (scope) === -1) {
+          scopes.push (self.arguments[fct].scope ());
+        }
+      }
+    });
+
+    var list = scopes.length ? ' (' + scopes.join (', ') + ')' : '';
+    return help + list;
+  }));
 
   self.options = {
     version: '0.0.1'
