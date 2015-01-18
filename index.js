@@ -28,29 +28,6 @@ var inquirer = require ('inquirer');
 
 var Command  = require ('./lib/command.js');
 
-/**
- * Prompt constructor.
- */
-function Prompt () {
-  this.scope = '';
-  this.message = '>';
-}
-
-Prompt.prototype.getInquirer = function () {
-  return [{
-    type    : 'input',
-    name    : 'command',
-    message : (this.scope && this.scope + ':') + this.message
-  }];
-};
-
-Prompt.prototype.setMessage = function (message) {
-  this.message = message;
-};
-
-Prompt.prototype.setScope = function (scope) {
-  this.scope = scope;
-};
 
 /**
  * ShellCraft constructor.
@@ -59,6 +36,7 @@ function ShellCraft () {
   var self = this;
 
   var ArgumentsList = require ('./lib/argumentslist.js');
+  var Prompt        = require ('./lib/prompt.js');
 
   self._exit = false;
   self._shell = true; /* open the shell be default */
