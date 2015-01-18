@@ -63,7 +63,8 @@ exports.register = function (extension, callback) {
       }
     }, cmd.hello)
     .command ('wizard', 'begins a wizard', {
-      wizard: true
+      wizard: true,
+      scope: 'warcraft'
     }, cmd.wizard)
     .option ('-f, --foobar', 'zog is foobar', {
       params: {
