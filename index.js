@@ -254,7 +254,9 @@ ShellCraft.prototype.cli = function (callback) {
     });
 
   Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
-    if (/^_/.test (fct) || self.arguments[fct].isBuiltIn () || !self.arguments[fct].isScoped (self._scope)) {
+    if (/^_/.test (fct) ||
+        self.arguments[fct].isBuiltIn () ||
+        !self.arguments[fct].isScoped (self._scope)) {
       return;
     }
 
