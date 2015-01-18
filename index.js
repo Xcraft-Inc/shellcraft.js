@@ -260,6 +260,7 @@ ShellCraft.prototype.shell = function (callback) {
  */
 ShellCraft.prototype.cli = function (callback) {
   var self = this;
+  var scoped = false;
   var program = require ('commander');
 
   program.version (self.options.version);
@@ -275,14 +276,33 @@ ShellCraft.prototype.cli = function (callback) {
       }
     });
 
+  /* Include all scoped commands. */
+  program.option ('-s, --scoped', 'include scoped commands (CLI only)');
+
+  var opts = program.normalize (process.argv.slice (2));
+  if (opts.indexOf ('-s') !== -1 || opts.indexOf ('--scoped') !== -1) {
+    scoped = true;
+  }
+
   Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
     if (/^_/.test (fct) ||
         self.arguments[fct].isBuiltIn () ||
-        !self.arguments[fct].isScoped (self._scope)) {
+        (!scoped && !self.arguments[fct].isScoped (self._scope))) {
       return;
     }
 
     var params = self.arguments[fct].params ();
+    var scope  = self.arguments[fct].scope ();
+
+    switch (scope) {
+    case '*':
+    case 'global':
+      scope = '';
+      break;
+    default:
+      scope += '@';
+      break;
+    }
 
     switch (self.arguments[fct].type ()) {
     case 'option': {
@@ -302,7 +322,7 @@ ShellCraft.prototype.cli = function (callback) {
     }
     case 'command': {
       program
-        .command (fct + params)
+        .command (scope + fct + params)
         .description (self.arguments[fct].help (true))
         .action (function (first, next) {
           self._shell = false;
