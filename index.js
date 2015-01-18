@@ -42,15 +42,15 @@ Prompt.prototype.getInquirer = function () {
     name    : 'command',
     message : (this.scope && this.scope + ':') + this.message
   }];
-}
+};
 
 Prompt.prototype.setMessage = function (message) {
   this.message = message;
-}
+};
 
 Prompt.prototype.setScope = function (scope) {
   this.scope = scope;
-}
+};
 
 /**
  * ShellCraft constructor.
