@@ -243,7 +243,8 @@ exports.register = function (extension, callback) {
       }
     }, cmd.hello)
     .command ('wizard', 'begins a wizard', {
-      wizard: true
+      wizard: true,
+      scope: 'warcraft'
     }, cmd.wizard)
     .option ('-f, --foobar', 'zog is foobar', {
       params: {
@@ -292,9 +293,8 @@ $ node myShell.js
 ? orc> help
  exit                    exit the shell
  help                    list of commands
- scope                   change scope
+ scope                   change scope (warcraft)
  hello <name> [etc...]   print Hello, John
- wizard                  begins a wizard
 ? orc> hello Tux
 zog tells "Hello, Tux"
 ? orc> exit
@@ -312,7 +312,6 @@ $ node myShell.js -h
 
     *
     hello <name> [etc...]  print Hello, John
-    wizard                 begins a wizard
 
   Options:
 
@@ -327,6 +326,9 @@ $ node myShell.js -f Bob hello Alice
 Bob tells "Hello, Alice"
 $ _
 ```
+
+Note that the commands which are in a different scope (like `wizard` in this
+example), are not shown in the global help output.
 
 # License
 
