@@ -111,6 +111,7 @@ $ node myShell.js -h
 
     -h, --help         output usage information
     -V, --version      output the version number
+    -s, --scoped       include scoped commands (CLI only)
 
 $ _
 ```
@@ -308,6 +309,7 @@ $ node myShell.js -h
 
   Usage: myShell [options] [command]
 
+
   Commands:
 
     *
@@ -317,6 +319,7 @@ $ node myShell.js -h
 
     -h, --help          output usage information
     -V, --version       output the version number
+    -s, --scoped        include scoped commands (CLI only)
     -f, --foobar <who>  zog is foobar
 
 $ _
@@ -329,6 +332,30 @@ $ _
 
 Note that the commands which are in a different scope (like `wizard` in this
 example), are not shown in the global help output.
+
+In order to see all commands, you must pas the -s, --scope argument:
+
+```
+$ node examples/myShell -sh
+
+  Usage: myShell [options] [command]
+
+
+  Commands:
+
+    *
+    hello <name> [etc...]  print Hello, John
+    warcraft@wizard        begins a wizard
+
+  Options:
+
+    -h, --help          output usage information
+    -V, --version       output the version number
+    -s, --scoped        include scoped commands (CLI only)
+    -f, --foobar <who>  zog is foobar
+
+$ _
+```
 
 # License
 
