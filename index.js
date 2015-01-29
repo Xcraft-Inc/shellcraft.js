@@ -296,12 +296,14 @@ ShellCraft.prototype.cli = function (callback) {
 
     switch (scope) {
     case '*':
-    case 'global':
+    case 'global': {
       scope = '';
       break;
-    default:
+    }
+    default: {
       scope += '@';
       break;
+    }
     }
 
     switch (self.arguments[fct].type ()) {
