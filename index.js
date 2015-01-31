@@ -140,7 +140,7 @@ ShellCraft.prototype.shell = function (callback) {
   self.autocomplete = new AutoComplete (self);
 
   /* Try to keep the prompt always at the bottom.
-   * These feature is experimental and mostly based on:
+   * This feature is experimental and mostly based on:
    *   http://stackoverflow.com/questions/12672193/fixed-position-command-prompt-in-node-js
    */
   var promptFixed = function () {
