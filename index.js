@@ -125,6 +125,7 @@ ShellCraft.prototype.isExit = function () {
 ShellCraft.prototype.shell = function (callback) {
   var self = this;
 
+  var util = require ('util');
   var AutoComplete = require ('./lib/autocomplete.js');
 
   if (self.options.prompt) {
@@ -137,6 +138,49 @@ ShellCraft.prototype.shell = function (callback) {
   process.stdin.setRawMode (true);
   self.uiPrompt     = {};
   self.autocomplete = new AutoComplete (self);
+
+  /* Try to keep the prompt always at the bottom.
+   * These feature is experimental and mostly based on:
+   *   http://stackoverflow.com/questions/12672193/fixed-position-command-prompt-in-node-js
+   */
+  var promptFixed = function () {
+    var con = {};
+    con.log   = console.log;
+    con.warn  = console.warn;
+    con.info  = console.info;
+    con.error = console.error;
+
+    var fu = function (type, args) {
+      if (!self.uiPrompt.rl) {
+        return con[type].apply (con, args);
+      }
+
+      var t = Math.ceil ((self.uiPrompt.rl.line.length + 3) / process.stdout.columns);
+      var text = util.format.apply (console, args);
+
+      self.uiPrompt.rl.output.write ('\n\x1B[' + t + 'A\x1B[0J');
+      self.uiPrompt.rl.output.write (text + '\n');
+      self.uiPrompt.rl.output.write (new Array (t).join ('\n\x1B[E'));
+      self.uiPrompt.rl._refreshLine ();
+    };
+
+    console.log = function () {
+      fu ('log', arguments);
+    };
+    console.warn = function () {
+      fu ('warn', arguments);
+    };
+    console.info = function () {
+      fu ('info', arguments);
+    };
+    console.error = function () {
+      fu ('error', arguments);
+    };
+  };
+
+  if (self.options.promptFixed) {
+    promptFixed ();
+  }
 
   process.stdin.on ('keypress', function (chunk, key) {
     if (!key) {
