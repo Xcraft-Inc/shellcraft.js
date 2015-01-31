@@ -54,7 +54,8 @@ Some options are available through the `option` argument.
 ```javascript
 options = {
   version: '0.1.0',
-  prompt: '>'
+  prompt: '>',
+  promptFixed: false
 }
 ```
 
@@ -68,6 +69,10 @@ prompt will always begins by `? `, like for example:
 
 it's because Inquirer has already its own prompt and this one can not be changed
 easily.
+
+The `promptFixed` option is experimental and disabled by default. The purpose
+is to keep the prompt at the bottom even if async `console.log` outputs are
+used. In other words, (most) outputs are put before the prompt.
 
 ✤ callback (msg)
 
