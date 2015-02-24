@@ -320,6 +320,10 @@ ShellCraft.prototype.cli = function (callback) {
       }
     });
 
+  program.option ('-h, --help', 'output usage information', function () {
+    program.help ();
+  });
+
   /* Include all scoped commands. */
   program.option ('-s, --scoped', 'include scoped commands (CLI only)');
 
