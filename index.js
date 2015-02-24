@@ -320,10 +320,6 @@ ShellCraft.prototype.cli = function (callback) {
       }
     });
 
-  program.option ('-h, --help', 'output usage information', function () {
-    program.help ();
-  });
-
   /* Include all scoped commands. */
   program.option ('-s, --scoped', 'include scoped commands (CLI only)');
 
@@ -483,6 +479,12 @@ ShellCraft.prototype.begin = function (options, callback) {
   var processExit = process.exit;
   process.exit = function (code) {
     self._shell = false;
+
+    /* HACK: Commander considers that -h, --help is not recognized.
+     * It's related to the abuse of process.exit.
+     */
+    console.error = function () {};
+
     self.shutdown (function () {
       processExit (code);
     });
