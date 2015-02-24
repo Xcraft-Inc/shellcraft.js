@@ -477,6 +477,17 @@ ShellCraft.prototype.begin = function (options, callback) {
   var self = this;
   self.options = options;
 
+  /* HACK: This is ugly but the problem comes from Commander which is abusing
+   * of process.exit.
+   */
+  var processExit = process.exit;
+  process.exit = function (code) {
+    self._shell = false;
+    self.shutdown (function () {
+      processExit (code);
+    });
+  };
+
   /* Run in command line. */
   self.cli (function () {
     if (self._shell) {
