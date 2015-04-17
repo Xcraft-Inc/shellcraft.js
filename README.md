@@ -3,6 +3,7 @@
 
 [![npm version](https://badge.fury.io/js/shellcraft.svg)](http://badge.fury.io/js/shellcraft)
 [![dependencies](https://david-dm.org/Xcraft-Inc/shellcraft.js.png?theme=shields.io)](https://david-dm.org/Xcraft-Inc/shellcraft.js)
+[![Build Status](https://travis-ci.org/Xcraft-Inc/shellcraft.js.svg?branch=master)](https://travis-ci.org/Xcraft-Inc/shellcraft.js)
 [![gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/Xcraft-Inc/shellcraft.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Simple CLI and shell for Node.js based on [commander](https://www.npmjs.org/package/commander)
