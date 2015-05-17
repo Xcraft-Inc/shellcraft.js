@@ -104,6 +104,13 @@ function ShellCraft () {
   };
   self.prompt = new Prompt ();
   self.extensions = {};
+
+  /* HACK inquirer prefix */
+  Object.keys (inquirer.prompt.prompts).forEach (function (prompt) {
+    inquirer.prompt.prompts[prompt].prototype.prefix = function (str) {
+      return str;
+    };
+  });
 }
 
 /**
