@@ -61,11 +61,10 @@ options = {
 ```
 
 The `version` is used by Commander with the `-V, --version` parameter.
-The default prompt `>` can be changed by something else. But note that the
-prompt will always begins by `? `, like for example:
+The default prompt `>` can be changed by something else, like for example:
 
 ```shell
-? myprompt>
+myprompt>
 ```
 
 it's because Inquirer has already its own prompt and this one can not be changed
@@ -97,12 +96,12 @@ shellcraft.begin ({
 shell mode
 ```
 $ node myShell.js
-? orc> _
-? orc> help
+orc> _
+orc> help
  exit     exit the shell
  help     list of commands
  scope    change scope
-? orc> exit
+orc> exit
 good bye
 $ _
 ```
@@ -296,15 +295,15 @@ shellcraft.registerExtension (shellExt, function () {
 shell mode
 ```
 $ node myShell.js
-? orc> _
-? orc> help
+orc> _
+orc> help
  exit                    exit the shell
  help                    list of commands
  scope                   change scope (warcraft)
  hello <name> [etc...]   print Hello, John
-? orc> hello Tux
+orc> hello Tux
 zog tells "Hello, Tux"
-? orc> exit
+orc> exit
 good bye
 $ _
 ```
