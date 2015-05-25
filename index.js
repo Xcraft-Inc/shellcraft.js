@@ -360,17 +360,15 @@ ShellCraft.prototype.cli = function (callback) {
     switch (self.arguments[fct].type ()) {
     case 'option': {
       program
-        .option (fct + params,
-                 self.arguments[fct].help (true),
-                 function () {
-                   var args = arguments;
+        .option (fct + params, self.arguments[fct].help (true), function () {
+           var args = arguments;
 
-                   /* We force to only one argument with the options. */
-                   if (args.length > 1) {
-                     args = [args[0]];
-                   }
-                   self.arguments[fct].call (function () {}, args);
-                 });
+           /* We force to only one argument with the options. */
+           if (args.length > 1) {
+             args = [args[0]];
+           }
+           self.arguments[fct].call (function () {}, args);
+         });
       return;
     }
     case 'command': {
