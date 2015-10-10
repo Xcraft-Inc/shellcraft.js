@@ -53,7 +53,7 @@ function ShellCraft () {
   self.arguments._add ('help', new Command (function (callback) {
     Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
       if (!self.arguments.hasOwnProperty (fct) &&
-          !/^_/.test(fct) &&
+          !/^_/.test (fct) &&
           self.arguments[fct].type () === 'command' &&
           self.arguments[fct].isScoped (self._scope)) {
         console.log (self.arguments[fct].help ());
@@ -82,7 +82,7 @@ function ShellCraft () {
     /* Look for all available scopes */
     Object.keys (Object.getPrototypeOf (self.arguments)).forEach (function (fct) {
       if (!self.arguments.hasOwnProperty (fct) &&
-        !/^_/.test(fct) &&
+        !/^_/.test (fct) &&
         self.arguments[fct].type () === 'command') {
         var scope = self.arguments[fct].scope ();
         if (scope === '*' || scope === 'global') {
@@ -116,7 +116,8 @@ function ShellCraft () {
 /**
  * Check if we must exit the shell.
  *
- * @api private
+ * API private
+ *
  * @returns {boolean} Exit status.
  */
 ShellCraft.prototype.isExit = function () {
@@ -126,7 +127,8 @@ ShellCraft.prototype.isExit = function () {
 /**
  * Start the Shell interface.
  *
- * @api private
+ * API private
+ *
  * @param {function(err, results)} callback
  */
 ShellCraft.prototype.shell = function (callback) {
@@ -306,7 +308,8 @@ ShellCraft.prototype.shell = function (callback) {
 /**
  * Start the Command Line Interface (CLI).
  *
- * @api private
+ * API private
+ *
  * @param {function(results)} callback
  */
 ShellCraft.prototype.cli = function (callback) {
@@ -428,7 +431,8 @@ ShellCraft.prototype.cli = function (callback) {
 /**
  * Close the Command Line Interface (CLI) or the shell.
  *
- * @api private
+ * API private
+ *
  * @param {function(err)} callback
  */
 ShellCraft.prototype.shutdown = function (callback) {
