@@ -1,57 +1,76 @@
 {
-  "requireBlocksOnNewline"                    : true,
-  "requireCamelCaseOrUpperCaseIdentifiers"    : true,
-  "requireCapitalizedConstructors"            : true,
-  "requireCommaBeforeLineBreak"               : true,
-  "requireCurlyBraces"                        : true,
-  "requireDotNotation"                        : true,
-  "requireLineFeedAtFileEnd"                  : true,
-  "requireOperatorBeforeLineBreak"            : true,
-  "requireParenthesesAroundIIFE"              : true,
+  "requireBlocksOnNewline":                   true,
+  "requireCamelCaseOrUpperCaseIdentifiers":   true,
+  "requireCapitalizedConstructors":           true,
+  "requireCommaBeforeLineBreak":              true,
+  "requireCurlyBraces":                       true,
+  "requireDotNotation":                       true,
+  "requireLineFeedAtFileEnd":                 true,
+  "requireOperatorBeforeLineBreak":           true,
+  "requireParenthesesAroundIIFE":             true,
+  "requireSemicolons":                        true,
 
-  "requireSpaceAfterBinaryOperators"          : true,
-  "requireSpaceAfterKeywords"                 : true,
-  "requireSpaceAfterLineComment"              : true,
+  "requireSpaceBetweenArguments":             true,
+  "requireSpacesInCallExpression":            true,
+  "requireSpacesInForStatement":              true,
 
-  "requireSpaceBeforeBinaryOperators"         : true,
-  "requireSpaceBeforeBlockStatements"         : true,
-  "requireSpaceBeforeObjectValues"            : true,
+  "requireSpaceAfterBinaryOperators":         true,
+  "requireSpaceAfterKeywords":                true,
+  "requireSpaceAfterLineComment":             true,
 
-  "requireSpacesInConditionalExpression"      : true,
+  "requireSpaceBeforeBinaryOperators":        true,
+  "requireSpaceBeforeBlockStatements":        true,
+  "requireSpaceBeforeObjectValues":           true,
+
+  "requireSpacesInConditionalExpression":     true,
   "requireSpacesInFunction": {
-    "beforeOpeningRoundBrace"                 : true,
-    "beforeOpeningCurlyBrace"                 : true
+    "beforeOpeningRoundBrace":                true,
+    "beforeOpeningCurlyBrace":                true
   },
 
-  "disallowEmptyBlocks"                       : true,
-  "disallowKeywordsOnNewLine"                 : [ "else", "catch" ],
-  "disallowNewlineBeforeBlockStatements"      : true,
-  "disallowPaddingNewlinesInBlocks"           : true,
-  "disallowQuotedKeysInObjects"               : true,
-  "disallowMixedSpacesAndTabs"                : true,
-  "disallowTrailingWhitespace"                : true,
+  "disallowEmptyBlocks":                      true,
+  "disallowKeywordsOnNewLine":                ["else", "catch"],
+  "disallowNewlineBeforeBlockStatements":     true,
+  "disallowPaddingNewlinesInBlocks":          true,
+  "disallowQuotedKeysInObjects":              true,
+  "disallowMixedSpacesAndTabs":               true,
+  "disallowTrailingWhitespace":               true,
 
-  "disallowSpaceAfterPrefixUnaryOperators"    : true,
-  "disallowSpaceBeforePostfixUnaryOperators"  : true,
+  "disallowSpaceAfterPrefixUnaryOperators":   true,
+  "disallowSpaceBeforePostfixUnaryOperators": true,
 
-  "disallowSpacesInsideArrayBrackets"         : "all",
-  "disallowSpacesInsideObjectBrackets"        : "all",
+  "disallowSpacesInsideArrayBrackets":        "all",
+  "disallowSpacesInsideObjectBrackets":       "all",
 
-  "disallowYodaConditions"                    : true,
+  "disallowSpaceAfterObjectKeys":             true,
+  "disallowSpaceBeforeComma":                 true,
+  "disallowSpaceBeforeSemicolon":             true,
 
-  "validateIndentation"                       : 2,
-  "validateJSDoc": {
-    "checkParamNames"                         : true,
-    "checkRedundantParams"                    : true,
-    "requireParamTypes"                       : true
+  "disallowYodaConditions":                   true,
+
+  "safeContextKeyword":                       ["self"],
+
+  "validateIndentation":                      2,
+  "jsDoc": {
+    "checkAnnotations":                       true,
+    "checkParamNames":                        true,
+    "checkRedundantParams":                   true,
+    "requireParamTypes":                      true,
+    "checkReturnTypes":                       true,
+    "checkRedundantReturns":                  true,
+    "requireReturnTypes":                     true,
+    "checkTypes":                             true,
+    "requireHyphenBeforeDescription":         true,
+    "requireNewlineAfterDescription":         true,
+    "requireDescriptionCompleteSentence":     true
   },
-  "validateLineBreaks"                        : "LF",
-  "validateParameterSeparator"                : ", ",
-  "validateQuoteMarks"                        : "'",
+  "validateLineBreaks":                       "LF",
+  "validateParameterSeparator":               ", ",
+  "validateQuoteMarks":                       "'",
 
   "maximumLineLength": {
-    "value"                                   : 120,
-    "allowUrlComments"                        : true,
-    "allowRegex"                              : true
+    "value":                                  120,
+    "allowUrlComments":                       true,
+    "allowRegex":                             true
   }
 }
