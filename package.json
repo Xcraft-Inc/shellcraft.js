@@ -30,12 +30,12 @@
   },
   "homepage": "https://github.com/Xcraft-Inc/shellcraft",
   "dependencies": {
-    "async": "^1.0.0",
-    "commander": "^2.8.1",
+    "async": "^1.5.0",
+    "commander": "^2.9.0",
     "inquirer": "^0.11.0"
   },
   "devDependencies": {
-    "mocha": "^2.2.5",
-    "should": "^7.0.2"
+    "mocha": "^2.3.3",
+    "should": "^7.1.1"
   }
 }
