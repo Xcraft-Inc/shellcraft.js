@@ -168,10 +168,12 @@ ShellCraft.prototype.shell = function (callback) {
       var t = Math.ceil ((self.uiPrompt.rl.line.length + 3) / process.stdout.columns);
       var text = util.format.apply (console, args);
 
+      self.uiPrompt.rl.output.unmute ();
       self.uiPrompt.rl.output.write ('\n\x1B[' + t + 'A\x1B[0J');
       self.uiPrompt.rl.output.write (text + '\n');
       self.uiPrompt.rl.output.write (new Array (t).join ('\n\x1B[E'));
       self.uiPrompt.rl._refreshLine ();
+      self.uiPrompt.rl.output.mute ();
     };
 
     console.log = function () {
