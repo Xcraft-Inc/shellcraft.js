@@ -227,8 +227,14 @@ ShellCraft.prototype.shell = function (callback) {
   var inquirerCallback = null;
   var inquirerPrompt   = self.prompt.getInquirer ();
 
+  var prompt = inquirer.createPromptModule ({
+    completer: function (line) {
+      return [[], line];
+    }
+  });
+
   async.forever (function (next) {
-    self.uiPrompt = inquirer.prompt (inquirerPrompt, function (answers) {
+    self.uiPrompt = prompt (inquirerPrompt, function (answers) {
       /*
        * Special handling when the command returns an Inquirer definition. In
        * this case we must return the answers to the caller.
