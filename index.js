@@ -107,8 +107,9 @@ function ShellCraft () {
 
   /* HACK inquirer prefix */
   Object.keys (inquirer.prompt.prompts).forEach (function (prompt) {
-    inquirer.prompt.prompts[prompt].prototype.prefix = function (str) {
-      return str;
+    inquirer.prompt.prompts[prompt].prototype.getQuestion = function () {
+      var msg = inquirer.prompt.prompts[prompt].super_.prototype.getQuestion.bind (this) ();
+      return msg.replace (/[^ ]*\?[^ ]* /, '');
     };
   });
 }
