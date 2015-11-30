@@ -6,8 +6,7 @@
 [![Build Status](https://travis-ci.org/Xcraft-Inc/shellcraft.js.svg?branch=master)](https://travis-ci.org/Xcraft-Inc/shellcraft.js)
 [![gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/Xcraft-Inc/shellcraft.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Simple CLI and shell for Node.js based on [commander](https://www.npmjs.org/package/commander)
-and [inquirer](https://www.npmjs.org/package/inquirer).
+Simple CLI and shell for Node.js based on [commander][1] and [inquirer][2].
 
 This module provides a way in order to use *commander* and *inquirer* together.
 There are a CLI and a shell mode, and the same commands can be used everywhere.
@@ -50,8 +49,6 @@ There are only two public API in order to play with shellcraft.
 
 ✤ options
 
-Some options are available through the `option` argument.
-
 ```javascript
 options = {
   version: '0.1.0',
@@ -67,18 +64,16 @@ The default prompt `>` can be changed by something else, like for example:
 myprompt>
 ```
 
-it's because Inquirer has already its own prompt and this one can not be changed
-easily.
-
 The `promptFixed` option is experimental and disabled by default. The purpose
 is to keep the prompt at the bottom even if async `console.log` outputs are
-used. In other words, (most) outputs are put before the prompt.
+used. In other words, (most) outputs are put before the prompt. Outputs via
+`process.stdout.write` (or `stderr`) are not handled by this option.
 
 ✤ callback (msg)
 
 The callback is called when the shell or the CLI is terminated. Note that
-currently the `msg` argument is not consistent between the CLI and the shell.
-This behavior will change in the future.
+currently the `msg` argument is not consistent between the CLI and the shell
+mode. This behavior will change in the future.
 
 ##### Example
 
@@ -101,8 +96,8 @@ orc> help
  exit     exit the shell
  help     list of commands
  scope    change scope
+
 orc> exit
-good bye
 $ _
 ```
 
@@ -140,7 +135,7 @@ extension
   .command ('foo', 'foo description', options, function (callback, args) {
     /*
      * callback (wizard, function (answers) {})
-     *   Is called in order to return to the prompt (or end if CLI). The wizard
+     *   Is called in order to return to the prompt (or exit if CLI). The wizard
      *   argument must be used only in order to process an Inquirer definition
      *   in the shell (or the CLI). Otherwise you must call the callback without
      *   arguments.
@@ -155,7 +150,7 @@ extension
      * callback ()
      *
      * args
-     *   This array can not have more than one element.
+     *   This array can not have more than one item.
      */
   });
 ```
@@ -163,7 +158,7 @@ extension
 The options can be (for `command`):
 ```javascript
 options : {
-  wizard : false,              /* when it's need Inquirer         */
+  wizard : false,              /* when it needs Inquirer          */
   params : {
     scope: 'goblin',           /* override global scope filter    */
     required: 'argName',       /* a required argument             */
@@ -185,7 +180,7 @@ options : {
 
 ✤ callback ()
 
-The callback must be called as soon as the extension is registered.
+The callback must be called when the extension is registered.
 
 ##### Example
 
@@ -301,10 +296,10 @@ orc> help
  help                    list of commands
  scope                   change scope (warcraft)
  hello <name> [etc...]   print Hello, John
+
 orc> hello Tux
 zog tells "Hello, Tux"
 orc> exit
-good bye
 $ _
 ```
 
@@ -338,7 +333,7 @@ $ _
 Note that the commands which are in a different scope (like `wizard` in this
 example), are not shown in the global help output.
 
-In order to see all commands, you must pas the -s, --scope argument:
+In order to see all commands, you must pas the `-s, --scope` argument:
 
 ```
 $ node examples/myShell -sh
@@ -366,7 +361,7 @@ $ _
 
 The MIT License (MIT)
 
-Copyright (c) 2014-2015 Xcraft <mathieu@schroetersa.ch>
+Copyright (c) 2014-2015 Xcraft <mathieu@schroetersa.ch>  
 Copyright (c) 2015      Xcraft <sam@loup.io>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -386,3 +381,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+[1]: https://www.npmjs.org/package/commander
+[2]: https://www.npmjs.org/package/inquirer
