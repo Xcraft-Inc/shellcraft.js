@@ -333,7 +333,7 @@ $ _
 Note that the commands which are in a different scope (like `wizard` in this
 example), are not shown in the global help output.
 
-In order to see all commands, you must pas the `-s, --scope` argument:
+In order to see all commands, you must pass the `-s, --scope` argument:
 
 ```
 $ node examples/myShell -sh
