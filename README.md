@@ -69,10 +69,10 @@ is to keep the prompt at the bottom even if async `console.log` outputs are
 used. In other words, (most) outputs are put before the prompt. Outputs via
 `process.stdout.write` (or `stderr`) are not handled by this option.
 
-✤ callback (msg)
+✤ callback (results)
 
 The callback is called when the shell or the CLI is terminated. Note that
-currently the `msg` argument is not consistent between the CLI and the shell
+currently the `results` argument is not consistent between the CLI and the shell
 mode. This behavior will change in the future.
 
 ##### Example
@@ -82,7 +82,7 @@ shellcraft.begin ({
   version: '0.0.1',
   prompt: 'orc>'
 }, function (err, results) {
-  if (msg) {
+  if (results) {
     console.log (results);
   }
 });
