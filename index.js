@@ -358,6 +358,8 @@ ShellCraft.prototype.shell = function (callback) {
         }
         next ();
       }
+    }).catch (function (ex) {
+      console.error (ex.stack || ex);
     });
   }, function (results) {
     if (callback) {
