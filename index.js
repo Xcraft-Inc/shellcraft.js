@@ -238,9 +238,7 @@ ShellCraft.prototype.shell = function (callback) {
   });
 
   async.forever (function (next) {
-    var promise = prompt (inquirerPrompt);
-    self.uiPrompt = promise.ui;
-    promise.then (function (answers) {
+    self.uiPrompt = prompt (inquirerPrompt, function (answers) {
       /*
        * Special handling when the command returns an Inquirer definition. In
        * this case we must return the answers to the caller.
