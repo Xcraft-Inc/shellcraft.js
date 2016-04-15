@@ -25,63 +25,10 @@
 
 var async    = require ('async');
 var inquirer = require ('inquirer');
+var parse    = require ('shell-quote').parse;
 
 var Command  = require ('./lib/command.js');
 
-
-/**
- * Parse string parameters.
- *
- * @param  {string} args
- * @returns {string[]} array of parameters.
- */
-function parseOptions (args) {
-  var result = [];
-
-  /* This regex is able to parse correctly options like:
-   *   --option=dirname
-   *   --option="dir name"
-   *  "--option=dir name"
-   *   --option="\"dirname\""
-   *   --option=dir\ name
-   *   --option='dir name'
-   *  '--option=dir name'
-   *   --option='\'dirname\''
-   *
-   * white spaces -----------------------------------------------------------------------------------------------.
-   * escaped double/single quotes  ------------------------------------------------------------------.           |
-   * single-quotes -------------------------------.                                                  |           |
-   * double-quotes ---------------.               |                                                  |           |
-   *                              |               |                                                  |           |
-   *                              v               v                                                  v           v  */
-  var list = args.match (/("(?:\\"|[^"])+"|'(?:\\'|[^'])+'|(?:[^\\](?:\\{1}|\\{3}|\\{5}|\\{7}|\\{9}) |[^ '"])+|[ ]+)/g);
-  if (!list) {
-    return [args];
-  }
-
-  list.forEach (function (arg) {
-    if (arg.trim ().length === 0) {
-      result.push ('');
-    } else {
-      var idx = result.length ? result.length - 1 : 0;
-      if (!result[idx]) {
-        result[idx] = arg;
-      } else {
-        console.log (arg);
-        result[idx] += arg
-          .replace (/^"(.*)"$/, '$1')
-          .replace (/^'(.*)'$/, '$1');
-      }
-    }
-  });
-
-  return result.map (function (arg) {
-    return arg
-      .replace (/^"(.*)"$/, '$1')
-      .replace (/^'(.*)'$/, '$1')
-      .replace (/\\(\\*)/g, '$1');
-  });
-}
 
 /**
  * ShellCraft constructor.
@@ -311,7 +258,7 @@ ShellCraft.prototype.shell = function (callback) {
       /*
        * Normal shell handling for the commands.
        */
-      var cmdArgs = parseOptions (answers.command);
+      var cmdArgs = parse (answers.command);
       var cmd = cmdArgs[0];
       cmdArgs.shift ();
 
