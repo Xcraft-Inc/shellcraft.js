@@ -228,7 +228,7 @@ ShellCraft.prototype.shell = function (callback) {
   }
 
   process.stdin.on ('keypress', function (chunk, key) {
-    if (!key) {
+    if (!key || !self.uiPrompt.rl) {
       return;
     }
 
