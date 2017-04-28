@@ -19,12 +19,14 @@ cmd.hello = function (callback, args) {
 };
 
 cmd.wizard = function (callback) {
-  var wizard = [{
-    /* Inquirer definition... */
-    type: 'input',
-    name: 'zog',
-    message: 'tell ' + zog
-  }];
+  var wizard = [
+    {
+      /* Inquirer definition... */
+      type: 'input',
+      name: 'zog',
+      message: 'tell ' + zog,
+    },
+  ];
 
   callback (wizard, function (answers) {
     /* stuff on answers */
@@ -55,22 +57,37 @@ opt.foobar = function (callback, args) {
 
 exports.register = function (extension, callback) {
   extension
-    .command ('hello', 'print Hello, John', {
-      wizard: false,
-      params: {
-        required: 'name',
-        optional: 'etc...'
-      }
-    }, cmd.hello)
-    .command ('wizard', 'begins a wizard', {
-      wizard: true,
-      scope: 'warcraft'
-    }, cmd.wizard)
-    .option ('-f, --foobar', 'zog is foobar', {
-      params: {
-        required: 'who'
-      }
-    }, opt.foobar);
+    .command (
+      'hello',
+      'print Hello, John',
+      {
+        wizard: false,
+        params: {
+          required: 'name',
+          optional: 'etc...',
+        },
+      },
+      cmd.hello
+    )
+    .command (
+      'wizard',
+      'begins a wizard',
+      {
+        wizard: true,
+        scope: 'warcraft',
+      },
+      cmd.wizard
+    )
+    .option (
+      '-f, --foobar',
+      'zog is foobar',
+      {
+        params: {
+          required: 'who',
+        },
+      },
+      opt.foobar
+    );
 
   callback ();
 };

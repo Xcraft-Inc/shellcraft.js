@@ -1,23 +1,18 @@
 'use strict';
 
-var path   = require ('path');
+var path = require ('path');
 var should = require ('should'); /* jshint ignore:line */
 
 var runShellCraft = function (args, callback) {
   var fork = require ('child_process').fork;
 
   var prog = fork (path.join (__dirname, './lib/sc.js'), args, {silent: true});
-  prog
-    .on ('error', callback)
-    .on ('close', callback);
+  prog.on ('error', callback).on ('close', callback);
 };
 
 describe ('command: test# <arg>', function () {
   it ('test0 should retrieve the argument', function (done) {
-    var args = [
-      'test0',
-      'the argument'
-    ];
+    var args = ['test0', 'the argument'];
 
     runShellCraft (args, function (code) {
       code.should.be.equal (0);
@@ -46,12 +41,10 @@ describe ('command: test# [arg]', function () {
     });
   });
 
-  it ('test3 should fail if the number of arguments is greater than 1', function (done) {
-    var args = [
-      'test3',
-      'arg1',
-      'arg2' /* this argument should be dropped */
-    ];
+  it ('test3 should fail if the number of arguments is greater than 1', function (
+    done
+  ) {
+    var args = ['test3', 'arg1', 'arg2' /* this argument should be dropped */];
 
     runShellCraft (args, function (code) {
       code.should.be.equal (0);
@@ -60,10 +53,7 @@ describe ('command: test# [arg]', function () {
   });
 
   it ('test4 should retrieve the argument', function (done) {
-    var args = [
-      'test4',
-      'the argument'
-    ];
+    var args = ['test4', 'the argument'];
 
     runShellCraft (args, function (code) {
       code.should.be.equal (0);

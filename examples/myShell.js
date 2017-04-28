@@ -8,12 +8,12 @@
 
 'use strict';
 
-var path       = require ('path');
+var path = require ('path');
 var shellcraft = require ('../');
 
 var options = {
   version: '0.0.1',
-  prompt: 'orc>'
+  prompt: 'orc>',
 };
 var shellExt = path.join (__dirname, 'myShellExtension.js');
 

@@ -6,14 +6,14 @@ exports.register = function (extension, callback) {
   var optArgRequired = {
     wizard: false,
     params: {
-      required: 'arg'
-    }
+      required: 'arg',
+    },
   };
   var optArgOptional = {
     wizard: false,
     params: {
-      optional: 'opt'
-    }
+      optional: 'opt',
+    },
   };
 
   extension
