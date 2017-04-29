@@ -36,7 +36,7 @@
     "shell-quote": "^1.6.1"
   },
   "devDependencies": {
-    "mocha": "^2.3.3",
+    "mocha": "^3.3.0",
     "should": "^8.3.1",
     "xcraft-dev-rules": "^0.1.12"
   }
