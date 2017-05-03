@@ -559,6 +559,9 @@ ShellCraft.prototype.begin = function (options, callback) {
     /* HACK: Commander considers that -h, --help is not recognized.
      * It's related to the abuse of process.exit.
      */
+    console.log = function () {};
+    console.warn = function () {};
+    console.info = function () {};
     console.error = function () {};
 
     self.shutdown (function () {
