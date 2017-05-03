@@ -546,8 +546,14 @@ ShellCraft.prototype.begin = function (options, callback) {
   /* HACK: This is ugly but the problem comes from Commander which is abusing
    * of process.exit.
    */
+  var terminated = false;
   var processExit = process.exit;
   process.exit = function (code) {
+    if (terminated) {
+      return;
+    }
+
+    terminated = true;
     self._shell = false;
 
     /* HACK: Commander considers that -h, --help is not recognized.
