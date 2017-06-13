@@ -15,7 +15,8 @@ module.exports = {
     node: true,
     es6: true,
   },
-  extends: ['eslint:recommended'],
+  plugins: ['react'],
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
   rules: {
     // Other rules
     'no-console': 'off',
