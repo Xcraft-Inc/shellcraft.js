@@ -70,6 +70,51 @@ exports.register = function (extension, callback) {
       cmd.hello
     )
     .command (
+      'required',
+      'multiple required arguments',
+      {
+        wizard: false,
+        params: {
+          required: ['firstname', 'lastname'],
+        },
+      },
+      cmd.hello
+    )
+    .command (
+      'optional',
+      'multiple optional arguments',
+      {
+        wizard: false,
+        params: {
+          optional: ['pseudo', 'hobby'],
+        },
+      },
+      cmd.hello
+    )
+    .command (
+      'optional-inf',
+      'multiple optional arguments',
+      {
+        wizard: false,
+        params: {
+          optional: ['pseudo', 'hobby...'],
+        },
+      },
+      cmd.hello
+    )
+    .command (
+      'required-optional',
+      'multiple required and optional arguments',
+      {
+        wizard: false,
+        params: {
+          required: ['firstname', 'lastname'],
+          optional: ['pseudo', 'hobby'],
+        },
+      },
+      cmd.hello
+    )
+    .command (
       'wizard',
       'begins a wizard',
       {
