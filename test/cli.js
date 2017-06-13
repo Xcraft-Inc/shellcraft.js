@@ -60,4 +60,13 @@ describe ('command: test# [arg]', function () {
       done ();
     });
   });
+
+  it ('test5 should fail if the number of arguments is not 3', function (done) {
+    var args = ['test5', 'arg1', 'arg2', 'arg3'];
+
+    runShellCraft (args, function (code) {
+      code.should.be.equal (0);
+      done ();
+    });
+  });
 });
