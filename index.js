@@ -273,9 +273,9 @@ ShellCraft.prototype.shell = function (callback) {
     function (next) {
       self.uiPrompt = prompt (inquirerPrompt, function (answers) {
         /*
-       * Special handling when the command returns an Inquirer definition. In
-       * this case we must return the answers to the caller.
-       */
+         * Special handling when the command returns an Inquirer definition. In
+         * this case we must return the answers to the caller.
+         */
         if (inquirerCallback) {
           var returnToPrompt = inquirerCallback (answers);
           if (returnToPrompt) {
@@ -287,8 +287,8 @@ ShellCraft.prototype.shell = function (callback) {
         }
 
         /*
-       * Normal shell handling for the commands.
-       */
+         * Normal shell handling for the commands.
+         */
         var cmdArgs = parse (answers.command);
         if (!cmdArgs.length) {
           cmdArgs.push (answers.command);
