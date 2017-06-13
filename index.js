@@ -320,10 +320,18 @@ ShellCraft.prototype.shell = function (callback) {
             throw new Error (cmd + ' is not a command');
           }
 
-          /* Check for required argument. */
-          var required = self.arguments[cmd].hasRequired ();
-          if (required && (!cmdArgs.length || !cmdArgs[0].length)) {
-            throw new Error ('missing required argument `' + required + "'");
+          /* Check for required arguments. */
+          var required = self.arguments[cmd].getRequired ();
+          required.forEach (function (req, index) {
+            if (!cmdArgs.length || !cmdArgs[index] || !cmdArgs[index].length) {
+              throw new Error ('missing required argument `' + req + "'");
+            }
+          });
+
+          /* Check for optional arguments. */
+          var optional = self.arguments[cmd].getOptional ();
+          if (!/[.]{3}$/.test (optional[optional.length - 1])) {
+            cmdArgs = cmdArgs.slice (0, required.length + optional.length);
           }
 
           self.arguments[cmd].call (function (data, wizardCallback) {
@@ -430,21 +438,14 @@ ShellCraft.prototype.cli = function (callback) {
         program
           .command (scope + fct + params)
           .description (self.arguments[fct].help (true))
-          .action (function (first, next) {
+          .action (function () {
             self._shell = false;
 
-            var values = [];
-
-            if (Array.isArray (first)) {
-              values = values.concat (first);
-            } else if (first && typeof first !== 'object') {
-              values.push (first);
-            }
-            if (Array.isArray (next)) {
-              values = values.concat (next);
-            } else if (next && typeof next !== 'object') {
-              values.push (next);
-            }
+            var values = Array.prototype.slice
+              .call (arguments)
+              .filter (function (arg) {
+                return arg && typeof arg !== 'object';
+              });
 
             self.arguments[fct].call (function (data, wizardCallback) {
               if (!data || !self.arguments[fct].isWizard ()) {
