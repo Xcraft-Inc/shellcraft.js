@@ -127,8 +127,8 @@ export two functions (`register()` and `unregister()`).
 
 The path on the `.js` file where the `register` and `unregister` methods are
 exported. An `extension` argument is passed with the `register` call. This
-object has two methods, `command` and `option`. It looks like the *commander*
-API.
+object has four methods, `command`, `option`, `remove` and `reload`. It looks
+like the *commander* API in some ways.
 
 ```javascript
 extension
@@ -153,6 +153,12 @@ extension
      *   This array can not have more than one item.
      */
   });
+
+/* Remove a specific command or option */
+extension.remove ('foo');
+
+/* Reload for autocomplete (for example after removing a command) */
+extension.reload ();
 ```
 
 The options can be (for `command`):
@@ -165,6 +171,18 @@ options : {
     optional: 'optionals...'   /* several optionals arguments     */
                                /* do not append ... in order to   */
                                /* limit to one optional argument  */
+  }
+}
+```
+
+It's possible to have an array of `required` or `optional` arguments,
+for example:
+
+```javascript
+options : {
+  params : {
+    required: ['arg1', 'arg2'],
+    optional: ['opt1', 'opt2', 'opts...']
   }
 }
 ```
