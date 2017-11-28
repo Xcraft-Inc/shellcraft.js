@@ -441,10 +441,24 @@ ShellCraft.prototype.cli = function (callback) {
           .action (function () {
             self._shell = false;
 
-            var values = Array.prototype.slice
+            var values = [];
+
+            Array.prototype.slice
               .call (arguments)
               .filter (function (arg) {
-                return arg && typeof arg !== 'object';
+                return arg !== undefined;
+              })
+              .forEach (function (arg) {
+                if (Array.isArray (arg)) {
+                  values = values.concat (arg);
+                  return;
+                }
+
+                if (typeof arg === 'object') {
+                  return;
+                }
+
+                values.push (arg);
               });
 
             self.arguments[fct].call (function (data, wizardCallback) {
