@@ -1,8 +1,8 @@
 'use strict';
 
-var should = require ('should'); /* jshint ignore:line */
+var should = require('should'); /* jshint ignore:line */
 
-exports.register = function (extension, callback) {
+exports.register = function(extension, callback) {
   var optArgRequired = {
     wizard: false,
     params: {
@@ -17,26 +17,26 @@ exports.register = function (extension, callback) {
   };
 
   extension
-    .command ('test0', '', optArgRequired, function (callback, args) {
-      args[0].should.be.equal ('the argument');
-      callback ();
+    .command('test0', '', optArgRequired, function(callback, args) {
+      args[0].should.be.equal('the argument');
+      callback();
     })
-    .command ('test1', '', optArgRequired, function (callback) {
-      callback ();
+    .command('test1', '', optArgRequired, function(callback) {
+      callback();
     })
-    .command ('test2', '', optArgOptional, function (callback, args) {
-      args.length.should.be.equal (0);
-      callback ();
+    .command('test2', '', optArgOptional, function(callback, args) {
+      args.length.should.be.equal(0);
+      callback();
     })
-    .command ('test3', '', optArgOptional, function (callback, args) {
-      args.length.should.be.equal (1);
-      callback ();
+    .command('test3', '', optArgOptional, function(callback, args) {
+      args.length.should.be.equal(1);
+      callback();
     })
-    .command ('test4', '', optArgOptional, function (callback, args) {
-      args[0].should.be.equal ('the argument');
-      callback ();
+    .command('test4', '', optArgOptional, function(callback, args) {
+      args[0].should.be.equal('the argument');
+      callback();
     })
-    .command (
+    .command(
       'test5',
       '',
       {
@@ -45,16 +45,16 @@ exports.register = function (extension, callback) {
           optional: ['c', 'd'],
         },
       },
-      function (callback, args) {
-        args.length.should.be.equal (3);
-        callback ();
+      function(callback, args) {
+        args.length.should.be.equal(3);
+        callback();
       }
     );
 
-  callback ();
+  callback();
 };
 
-exports.unregister = function (callback) {
+exports.unregister = function(callback) {
   /* internal stuff */
-  callback ();
+  callback();
 };

@@ -13,12 +13,12 @@ var zog = 'zog';
 var cmd = {};
 var opt = {};
 
-cmd.hello = function (callback, args) {
-  console.log (zog + ' tells "Hello, ' + args.join (' ') + '"');
-  callback ();
+cmd.hello = function(callback, args) {
+  console.log(zog + ' tells "Hello, ' + args.join(' ') + '"');
+  callback();
 };
 
-cmd.wizard = function (callback) {
+cmd.wizard = function(callback) {
   var wizard = [
     {
       /* Inquirer definition... */
@@ -28,12 +28,12 @@ cmd.wizard = function (callback) {
     },
   ];
 
-  callback (wizard, function (answers) {
+  callback(wizard, function(answers) {
     /* stuff on answers */
     if (answers.zog === zog) {
-      console.log (zog + ' ' + zog);
+      console.log(zog + ' ' + zog);
     } else {
-      console.log ('lokthar?');
+      console.log('lokthar?');
     }
 
     /*
@@ -46,18 +46,18 @@ cmd.wizard = function (callback) {
   });
 };
 
-opt.foobar = function (callback, args) {
+opt.foobar = function(callback, args) {
   if (args) {
     zog = args[0];
   } else {
     zog = 'lokthar';
   }
-  callback ();
+  callback();
 };
 
-exports.register = function (extension, callback) {
+exports.register = function(extension, callback) {
   extension
-    .command (
+    .command(
       'hello',
       'print Hello, John',
       {
@@ -69,7 +69,7 @@ exports.register = function (extension, callback) {
       },
       cmd.hello
     )
-    .command (
+    .command(
       'required',
       'multiple required arguments',
       {
@@ -80,7 +80,7 @@ exports.register = function (extension, callback) {
       },
       cmd.hello
     )
-    .command (
+    .command(
       'optional',
       'multiple optional arguments',
       {
@@ -91,7 +91,7 @@ exports.register = function (extension, callback) {
       },
       cmd.hello
     )
-    .command (
+    .command(
       'optional-inf',
       'multiple optional arguments',
       {
@@ -102,7 +102,7 @@ exports.register = function (extension, callback) {
       },
       cmd.hello
     )
-    .command (
+    .command(
       'required-optional',
       'multiple required and optional arguments',
       {
@@ -114,7 +114,7 @@ exports.register = function (extension, callback) {
       },
       cmd.hello
     )
-    .command (
+    .command(
       'wizard',
       'begins a wizard',
       {
@@ -123,7 +123,7 @@ exports.register = function (extension, callback) {
       },
       cmd.wizard
     )
-    .option (
+    .option(
       '-f, --foobar',
       'zog is foobar',
       {
@@ -134,10 +134,10 @@ exports.register = function (extension, callback) {
       opt.foobar
     );
 
-  callback ();
+  callback();
 };
 
-exports.unregister = function (callback) {
+exports.unregister = function(callback) {
   /* internal stuff */
-  callback ();
+  callback();
 };
