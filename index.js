@@ -97,7 +97,13 @@ function ShellCraft() {
           callback();
         }
       },
-      {builtIn: true, scope: '*'},
+      {
+        builtIn: true,
+        scope: '*',
+        params: {
+          optional: 'scope',
+        },
+      },
       function() {
         var help = 'change scope';
         var scopes = [];
