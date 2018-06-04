@@ -176,7 +176,9 @@ ShellCraft.prototype.shell = function(callback) {
   var history = [];
   var iterator = 0;
 
-  process.stdin.setRawMode(true);
+  if (process.stdin.setRawMode) {
+    process.stdin.setRawMode(true);
+  }
   self.uiPrompt = {};
   self.autocomplete = new AutoComplete(self);
 
@@ -192,7 +194,7 @@ ShellCraft.prototype.shell = function(callback) {
     con.error = console.error;
 
     var fu = function(type, args) {
-      if (!self.uiPrompt.rl) {
+      if (!self.uiPrompt.rl || !process.stdout.columns) {
         return con[type].apply(con, args);
       }
 
