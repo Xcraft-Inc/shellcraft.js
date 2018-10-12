@@ -38,6 +38,7 @@
   "devDependencies": {
     "mocha": "^5.2.0",
     "should": "^11.2.1",
-    "xcraft-dev-rules": "^0.2.0"
+    "xcraft-dev-rules": "^0.2.0",
+    "prettier": "1.12.1"
   }
 }

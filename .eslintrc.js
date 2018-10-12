@@ -23,6 +23,5 @@ module.exports = {
     'no-console': 'off',
     'valid-jsdoc': ['error', {requireReturn: false}],
     eqeqeq: 'error',
-    'react/display-name': 'off',
   },
 };
