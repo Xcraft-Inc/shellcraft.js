@@ -22,7 +22,7 @@ module.exports = {
     // Other rules
     'no-console': 'off',
     'valid-jsdoc': ['error', {requireReturn: false}],
-    eqeqeq: 'error',
+    'eqeqeq': 'error',
     'react/display-name': 'off',
   },
 };
