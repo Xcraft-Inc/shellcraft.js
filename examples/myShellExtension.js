@@ -13,12 +13,12 @@ var zog = 'zog';
 var cmd = {};
 var opt = {};
 
-cmd.hello = function(callback, args) {
+cmd.hello = function (callback, args) {
   console.log(zog + ' tells "Hello, ' + args.join(' ') + '"');
   callback();
 };
 
-cmd.wizard = function(callback) {
+cmd.wizard = function (callback) {
   var wizard = [
     {
       /* Inquirer definition... */
@@ -28,7 +28,7 @@ cmd.wizard = function(callback) {
     },
   ];
 
-  callback(wizard, function(answers) {
+  callback(wizard, function (answers) {
     /* stuff on answers */
     if (answers.zog === zog) {
       console.log(zog + ' ' + zog);
@@ -46,7 +46,7 @@ cmd.wizard = function(callback) {
   });
 };
 
-opt.foobar = function(callback, args) {
+opt.foobar = function (callback, args) {
   if (args) {
     zog = args[0];
   } else {
@@ -55,7 +55,7 @@ opt.foobar = function(callback, args) {
   callback();
 };
 
-exports.register = function(extension, callback) {
+exports.register = function (extension, callback) {
   extension
     .command(
       'hello',
@@ -137,7 +137,7 @@ exports.register = function(extension, callback) {
   callback();
 };
 
-exports.unregister = function(callback) {
+exports.unregister = function (callback) {
   /* internal stuff */
   callback();
 };

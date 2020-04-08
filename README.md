@@ -1,4 +1,3 @@
-
 # [shellcraft.js](https://www.npmjs.org/package/shellcraft)
 
 [![npm version](https://badge.fury.io/js/shellcraft.svg)](http://badge.fury.io/js/shellcraft)
@@ -8,7 +7,7 @@
 
 Simple CLI and shell for Node.js based on [commander][1] and [inquirer][2].
 
-This module provides a way in order to use *commander* and *inquirer* together.
+This module provides a way in order to use _commander_ and _inquirer_ together.
 There are a CLI and a shell mode, and the same commands can be used everywhere.
 
 **shellcraft.js** supports the command history and the auto-completion (in shell
@@ -27,15 +26,15 @@ $ npm install shellcraft
 ### Hello, World
 
 ```javascript
-var shellcraft = require ('shellcraft');
+var shellcraft = require('shellcraft');
 
 var options = {
-  version: '0.1.0'
+  version: '0.1.0',
 };
 
-shellcraft.begin (options, function (err, results) {
+shellcraft.begin(options, function (err, results) {
   if (results) {
-    console.log (results);
+    console.log(results);
   }
 });
 ```
@@ -45,6 +44,7 @@ shellcraft.begin (options, function (err, results) {
 There are only two public API in order to play with shellcraft.
 
 ---
+
 #### shellcraft.begin (options, callback)
 
 ✤ options
@@ -53,8 +53,8 @@ There are only two public API in order to play with shellcraft.
 options = {
   version: '0.1.0',
   prompt: '>',
-  promptFixed: false
-}
+  promptFixed: false,
+};
 ```
 
 The `version` is used by Commander with the `-V, --version` parameter.
@@ -78,17 +78,21 @@ mode. This behavior will change in the future.
 ##### Example
 
 ```javascript
-shellcraft.begin ({
-  version: '0.0.1',
-  prompt: 'orc>'
-}, function (err, results) {
-  if (results) {
-    console.log (results);
+shellcraft.begin(
+  {
+    version: '0.0.1',
+    prompt: 'orc>',
+  },
+  function (err, results) {
+    if (results) {
+      console.log(results);
+    }
   }
-});
+);
 ```
 
 shell mode
+
 ```
 $ node myShell.js
 orc> _
@@ -102,6 +106,7 @@ $ _
 ```
 
 CLI mode
+
 ```
 $ node myShell.js -h
 
@@ -117,6 +122,7 @@ $ _
 ```
 
 ---
+
 #### shellcraft.registerExtension (shellExt, callback);
 
 There are two builtin commands `help` and `exit`. For more commands you must
@@ -128,11 +134,11 @@ export two functions (`register()` and `unregister()`).
 The path on the `.js` file where the `register` and `unregister` methods are
 exported. An `extension` argument is passed with the `register` call. This
 object has four methods, `command`, `option`, `remove` and `reload`. It looks
-like the *commander* API in some ways.
+like the _commander_ API in some ways.
 
 ```javascript
 extension
-  .command ('foo', 'foo description', options, function (callback, args) {
+  .command('foo', 'foo description', options, function (callback, args) {
     /*
      * callback (wizard, function (answers) {})
      *   Is called in order to return to the prompt (or exit if CLI). The wizard
@@ -145,7 +151,7 @@ extension
      *   Are the arguments provided with the command.
      */
   })
-  .option ('-f, --foo', 'foo description', options, function (callback, args) {
+  .option('-f, --foo', 'foo description', options, function (callback, args) {
     /*
      * callback ()
      *
@@ -155,13 +161,14 @@ extension
   });
 
 /* Remove a specific command or option */
-extension.remove ('foo');
+extension.remove('foo');
 
 /* Reload for autocomplete (for example after removing a command) */
-extension.reload ();
+extension.reload();
 ```
 
 The options can be (for `command`):
+
 ```javascript
 options : {
   wizard : false,              /* when it needs Inquirer          */
@@ -188,6 +195,7 @@ options : {
 ```
 
 The options can be (for `option`):
+
 ```javascript
 options : {
   params : {
@@ -213,24 +221,26 @@ var cmd = {};
 var opt = {};
 
 cmd.hello = function (callback, args) {
-  console.log (zog + ' tells "Hello, ' + args.join (' ') + '"');
-  callback ();
+  console.log(zog + ' tells "Hello, ' + args.join(' ') + '"');
+  callback();
 };
 
 cmd.wizard = function (callback) {
-  var wizard = [{
-    /* Inquirer definition... */
-    type: 'input',
-    name: 'zog',
-    message: 'tell ' + zog
-  }];
+  var wizard = [
+    {
+      /* Inquirer definition... */
+      type: 'input',
+      name: 'zog',
+      message: 'tell ' + zog,
+    },
+  ];
 
-  callback (wizard, function (answers) {
+  callback(wizard, function (answers) {
     /* stuff on answers */
     if (answers.zog === zog) {
-      console.log (zog + ' ' + zog);
+      console.log(zog + ' ' + zog);
     } else {
-      console.log ('lokthar?');
+      console.log('lokthar?');
     }
 
     /*
@@ -249,34 +259,49 @@ opt.foobar = function (callback, args) {
   } else {
     zog = 'lokthar';
   }
-  callback ();
+  callback();
 };
 
 exports.register = function (extension, callback) {
   extension
-    .command ('hello', 'print Hello, John', {
-      wizard: false,
-      params: {
-        required: 'name',
-        optional: 'etc...'
-      }
-    }, cmd.hello)
-    .command ('wizard', 'begins a wizard', {
-      wizard: true,
-      scope: 'warcraft'
-    }, cmd.wizard)
-    .option ('-f, --foobar', 'zog is foobar', {
-      params: {
-        required: 'who'
-      }
-    }, opt.foobar);
+    .command(
+      'hello',
+      'print Hello, John',
+      {
+        wizard: false,
+        params: {
+          required: 'name',
+          optional: 'etc...',
+        },
+      },
+      cmd.hello
+    )
+    .command(
+      'wizard',
+      'begins a wizard',
+      {
+        wizard: true,
+        scope: 'warcraft',
+      },
+      cmd.wizard
+    )
+    .option(
+      '-f, --foobar',
+      'zog is foobar',
+      {
+        params: {
+          required: 'who',
+        },
+      },
+      opt.foobar
+    );
 
-  callback ();
+  callback();
 };
 
 exports.unregister = function (callback) {
   /* internal stuff */
-  callback ();
+  callback();
 };
 ```
 
@@ -285,19 +310,19 @@ exports.unregister = function (callback) {
 ```javascript
 'use strict';
 
-var path       = require ('path');
-var shellcraft = require ('../');
+var path = require('path');
+var shellcraft = require('../');
 
 var options = {
   version: '0.0.1',
-  prompt: 'orc>'
+  prompt: 'orc>',
 };
-var shellExt = path.join (__dirname, 'myShellExtension.js');
+var shellExt = path.join(__dirname, 'myShellExtension.js');
 
-shellcraft.registerExtension (shellExt, function () {
-  shellcraft.begin (options, function (err, results) {
+shellcraft.registerExtension(shellExt, function () {
+  shellcraft.begin(options, function (err, results) {
     if (results) {
-      console.log (results);
+      console.log(results);
     }
   });
 });
@@ -306,6 +331,7 @@ shellcraft.registerExtension (shellExt, function () {
 ---
 
 shell mode
+
 ```
 $ node myShell.js
 orc> _
@@ -322,6 +348,7 @@ $ _
 ```
 
 CLI mode
+
 ```
 $ node myShell.js -h
 
@@ -401,7 +428,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
 
 [1]: https://www.npmjs.org/package/commander
 [2]: https://www.npmjs.org/package/inquirer

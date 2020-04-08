@@ -2,7 +2,7 @@
 
 var should = require('should'); /* jshint ignore:line */
 
-exports.register = function(extension, callback) {
+exports.register = function (extension, callback) {
   var optArgRequired = {
     wizard: false,
     params: {
@@ -17,22 +17,22 @@ exports.register = function(extension, callback) {
   };
 
   extension
-    .command('test0', '', optArgRequired, function(callback, args) {
+    .command('test0', '', optArgRequired, function (callback, args) {
       args[0].should.be.equal('the argument');
       callback();
     })
-    .command('test1', '', optArgRequired, function(callback) {
+    .command('test1', '', optArgRequired, function (callback) {
       callback();
     })
-    .command('test2', '', optArgOptional, function(callback, args) {
+    .command('test2', '', optArgOptional, function (callback, args) {
       args.length.should.be.equal(0);
       callback();
     })
-    .command('test3', '', optArgOptional, function(callback, args) {
+    .command('test3', '', optArgOptional, function (callback, args) {
       args.length.should.be.equal(1);
       callback();
     })
-    .command('test4', '', optArgOptional, function(callback, args) {
+    .command('test4', '', optArgOptional, function (callback, args) {
       args[0].should.be.equal('the argument');
       callback();
     })
@@ -45,7 +45,7 @@ exports.register = function(extension, callback) {
           optional: ['c', 'd'],
         },
       },
-      function(callback, args) {
+      function (callback, args) {
         args.length.should.be.equal(3);
         callback();
       }
@@ -54,7 +54,7 @@ exports.register = function(extension, callback) {
   callback();
 };
 
-exports.unregister = function(callback) {
+exports.unregister = function (callback) {
   /* internal stuff */
   callback();
 };
