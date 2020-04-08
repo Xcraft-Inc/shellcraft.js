@@ -46,7 +46,7 @@ function ShellCraft() {
   self.arguments._add(
     'exit',
     new Command(
-      function(callback) {
+      function (callback) {
         self._exit = true;
         if (callback) {
           callback();
@@ -60,8 +60,8 @@ function ShellCraft() {
   self.arguments._add(
     'help',
     new Command(
-      function(callback) {
-        Object.keys(Object.getPrototypeOf(self.arguments)).forEach(function(
+      function (callback) {
+        Object.keys(Object.getPrototypeOf(self.arguments)).forEach(function (
           fct
         ) {
           if (
@@ -88,7 +88,7 @@ function ShellCraft() {
   self.arguments._add(
     'scope',
     new Command(
-      function(callback, scope) {
+      function (callback, scope) {
         self._scope = scope[0] || 'global';
         self.autocomplete.reload();
         self.prompt.setScope(self._scope !== 'global' ? scope : '');
@@ -104,12 +104,12 @@ function ShellCraft() {
           optional: 'scope',
         },
       },
-      function() {
+      function () {
         var help = 'change scope';
         var scopes = [];
 
         /* Look for all available scopes */
-        Object.keys(Object.getPrototypeOf(self.arguments)).forEach(function(
+        Object.keys(Object.getPrototypeOf(self.arguments)).forEach(function (
           fct
         ) {
           if (
@@ -141,8 +141,8 @@ function ShellCraft() {
   self.extensions = {};
 
   /* HACK inquirer prefix */
-  Object.keys(inquirer.prompt.prompts).forEach(function(prompt) {
-    inquirer.prompt.prompts[prompt].prototype.getQuestion = function() {
+  Object.keys(inquirer.prompt.prompts).forEach(function (prompt) {
+    inquirer.prompt.prompts[prompt].prototype.getQuestion = function () {
       var msg = inquirer.prompt.prompts[
         prompt
       ].super_.prototype.getQuestion.bind(this)();
@@ -158,7 +158,7 @@ function ShellCraft() {
  *
  * @returns {boolean} Exit status.
  */
-ShellCraft.prototype.isExit = function() {
+ShellCraft.prototype.isExit = function () {
   return this._exit;
 };
 
@@ -169,7 +169,7 @@ ShellCraft.prototype.isExit = function() {
  *
  * @param {function(err, results)} callback
  */
-ShellCraft.prototype.shell = function(callback) {
+ShellCraft.prototype.shell = function (callback) {
   var self = this;
 
   var util = require('util');
@@ -192,14 +192,14 @@ ShellCraft.prototype.shell = function(callback) {
    * This feature is experimental and mostly based on:
    *   http://stackoverflow.com/questions/12672193/fixed-position-command-prompt-in-node-js
    */
-  var promptFixed = function() {
+  var promptFixed = function () {
     var con = {};
     con.log = console.log;
     con.warn = console.warn;
     con.info = console.info;
     con.error = console.error;
 
-    var fu = function(type, args) {
+    var fu = function (type, args) {
       if (!self.uiPrompt.rl || !process.stdout.columns) {
         return con[type].apply(con, args);
       }
@@ -217,16 +217,16 @@ ShellCraft.prototype.shell = function(callback) {
       self.uiPrompt.rl.output.mute();
     };
 
-    console.log = function() {
+    console.log = function () {
       fu('log', arguments);
     };
-    console.warn = function() {
+    console.warn = function () {
       fu('warn', arguments);
     };
-    console.info = function() {
+    console.info = function () {
       fu('info', arguments);
     };
-    console.error = function() {
+    console.error = function () {
       fu('error', arguments);
     };
   };
@@ -235,7 +235,7 @@ ShellCraft.prototype.shell = function(callback) {
     promptFixed();
   }
 
-  process.stdin.on('keypress', function(chunk, key) {
+  process.stdin.on('keypress', function (chunk, key) {
     if (!key || !self.uiPrompt.rl) {
       return;
     }
@@ -272,14 +272,14 @@ ShellCraft.prototype.shell = function(callback) {
   var inquirerPrompt = self.prompt.getInquirer();
 
   var prompt = inquirer.createPromptModule({
-    completer: function(line) {
+    completer: function (line) {
       return [[], line];
     },
   });
 
   async.forever(
-    function(next) {
-      self.uiPrompt = prompt(inquirerPrompt, function(answers) {
+    function (next) {
+      self.uiPrompt = prompt(inquirerPrompt, function (answers) {
         /*
          * Special handling when the command returns an Inquirer definition. In
          * this case we must return the answers to the caller.
@@ -330,7 +330,7 @@ ShellCraft.prototype.shell = function(callback) {
 
           /* Check for required arguments. */
           var required = self.arguments[cmd].getRequired();
-          required.forEach(function(req, index) {
+          required.forEach(function (req, index) {
             if (!cmdArgs.length || !cmdArgs[index] || !cmdArgs[index].length) {
               throw new Error('missing required argument `' + req + "'");
             }
@@ -342,7 +342,7 @@ ShellCraft.prototype.shell = function(callback) {
             cmdArgs = cmdArgs.slice(0, required.length + optional.length);
           }
 
-          self.arguments[cmd].call(function(data, wizardCallback) {
+          self.arguments[cmd].call(function (data, wizardCallback) {
             /* The next prompt we must start the wizard provided by the client. */
             if (data) {
               if (self.arguments[cmd].isWizard()) {
@@ -363,7 +363,7 @@ ShellCraft.prototype.shell = function(callback) {
         }
       });
     },
-    function(results) {
+    function (results) {
       if (callback) {
         callback(null, results);
       }
@@ -378,7 +378,7 @@ ShellCraft.prototype.shell = function(callback) {
  *
  * @param {function(results)} callback
  */
-ShellCraft.prototype.cli = function(callback) {
+ShellCraft.prototype.cli = function (callback) {
   var self = this;
   var scoped = false;
   var program = require('commander');
@@ -388,7 +388,7 @@ ShellCraft.prototype.cli = function(callback) {
   program
     .command('*')
     .description('')
-    .action(function(cmd) {
+    .action(function (cmd) {
       self._shell = false;
       console.error('command ' + cmd + ' unknown');
       if (callback) {
@@ -404,7 +404,7 @@ ShellCraft.prototype.cli = function(callback) {
     scoped = true;
   }
 
-  Object.keys(Object.getPrototypeOf(self.arguments)).forEach(function(fct) {
+  Object.keys(Object.getPrototypeOf(self.arguments)).forEach(function (fct) {
     if (
       /^_/.test(fct) ||
       self.arguments[fct].isBuiltIn() ||
@@ -433,14 +433,14 @@ ShellCraft.prototype.cli = function(callback) {
         program.option(
           fct + params,
           self.arguments[fct].help(true),
-          function() {
+          function () {
             var args = arguments;
 
             /* We force to only one argument with the options. */
             if (args.length > 1) {
               args = [args[0]];
             }
-            self.arguments[fct].call(function() {}, args);
+            self.arguments[fct].call(function () {}, args);
           }
         );
         return;
@@ -449,17 +449,17 @@ ShellCraft.prototype.cli = function(callback) {
         program
           .command(scope + fct + params)
           .description(self.arguments[fct].help(true))
-          .action(function() {
+          .action(function () {
             self._shell = false;
 
             var values = [];
 
             Array.prototype.slice
               .call(arguments)
-              .filter(function(arg) {
+              .filter(function (arg) {
                 return arg !== undefined;
               })
-              .forEach(function(arg) {
+              .forEach(function (arg) {
                 if (Array.isArray(arg)) {
                   values = values.concat(arg);
                   return;
@@ -472,7 +472,7 @@ ShellCraft.prototype.cli = function(callback) {
                 values.push(arg);
               });
 
-            self.arguments[fct].call(function(data, wizardCallback) {
+            self.arguments[fct].call(function (data, wizardCallback) {
               if (!data || !self.arguments[fct].isWizard()) {
                 if (callback) {
                   callback();
@@ -481,7 +481,7 @@ ShellCraft.prototype.cli = function(callback) {
               }
 
               /* Start the wizard. */
-              inquirer.prompt(data, function(answers) {
+              inquirer.prompt(data, function (answers) {
                 var stop = wizardCallback(answers);
                 if (stop && callback) {
                   callback();
@@ -518,14 +518,14 @@ ShellCraft.prototype.cli = function(callback) {
  *
  * @param {function(err)} callback
  */
-ShellCraft.prototype.shutdown = function(callback) {
+ShellCraft.prototype.shutdown = function (callback) {
   var self = this;
   async.each(
     Object.keys(self.extensions),
-    function(ext, callback) {
+    function (ext, callback) {
       self.extensions[ext].unregister(callback);
     },
-    function(err) {
+    function (err) {
       callback(err);
     }
   );
@@ -537,7 +537,7 @@ ShellCraft.prototype.shutdown = function(callback) {
  * @param {string} shellExt - Path on the shell extension file.
  * @param {function(err)} callback
  */
-ShellCraft.prototype.registerExtension = function(shellExt, callback) {
+ShellCraft.prototype.registerExtension = function (shellExt, callback) {
   var self = this;
   var path = require('path');
   var ext = require(shellExt);
@@ -545,7 +545,7 @@ ShellCraft.prototype.registerExtension = function(shellExt, callback) {
   var Extension = require('./lib/extension.js');
   var extension = new Extension(self);
 
-  ext.register(extension, function(err) {
+  ext.register(extension, function (err) {
     if (!err) {
       self.extensions[path.resolve(shellExt)] = ext;
       if (self.autocomplete) {
@@ -565,7 +565,7 @@ ShellCraft.prototype.registerExtension = function(shellExt, callback) {
  * @param {Object} options
  * @param {function(err, results)} callback
  */
-ShellCraft.prototype.begin = function(options, callback) {
+ShellCraft.prototype.begin = function (options, callback) {
   var self = this;
   self.options = options;
 
@@ -574,7 +574,7 @@ ShellCraft.prototype.begin = function(options, callback) {
    */
   var terminated = false;
   var processExit = process.exit;
-  process.exit = function(code) {
+  process.exit = function (code) {
     if (terminated) {
       return;
     }
@@ -585,21 +585,21 @@ ShellCraft.prototype.begin = function(options, callback) {
     /* HACK: Commander considers that -h, --help is not recognized.
      * It's related to the abuse of process.exit.
      */
-    console.log = function() {};
-    console.warn = function() {};
-    console.info = function() {};
-    console.error = function() {};
+    console.log = function () {};
+    console.warn = function () {};
+    console.info = function () {};
+    console.error = function () {};
 
-    self.shutdown(function() {
+    self.shutdown(function () {
       processExit(code);
     });
   };
 
   /* Run in command line. */
-  self.cli(function() {
+  self.cli(function () {
     if (self._shell) {
       /* Run the Shell. */
-      self.shell(function() {
+      self.shell(function () {
         self.shutdown(callback);
       });
     } else {
