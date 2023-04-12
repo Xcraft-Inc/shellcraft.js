@@ -3,7 +3,6 @@
 module.exports = {
   root: true,
   parserOptions: {
-    ecmaVersion: 7,
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
@@ -11,17 +10,20 @@ module.exports = {
   },
   env: {
     browser: true,
+    es2020: true,
     mocha: true,
     node: true,
-    es6: true,
   },
-  parser: 'babel-eslint',
-  plugins: ['react', 'babel'],
-  extends: ['prettier', 'eslint:recommended', 'plugin:react/recommended'],
+  plugins: ['react', 'babel', 'jsdoc'],
+  extends: [
+    'prettier',
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:jsdoc/recommended',
+  ],
   rules: {
     // Other rules
     'no-console': 'off',
-    'valid-jsdoc': ['error', {requireReturn: false}],
     'eqeqeq': 'error',
     'react/display-name': 'off',
   },
