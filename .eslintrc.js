@@ -26,5 +26,14 @@ module.exports = {
     'no-console': 'off',
     'eqeqeq': 'error',
     'react/display-name': 'off',
+    'no-unused-vars': [
+      'error',
+      {
+        vars: 'all',
+        args: 'none',
+        ignoreRestSiblings: true,
+        destructuredArrayIgnorePattern: '^_',
+      },
+    ],
   },
 };
