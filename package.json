@@ -36,8 +36,8 @@
     "shell-quote": "^1.6.1"
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
-    "should": "^11.2.1",
+    "chai": "^5.2.0",
+    "mocha": "^11.2.2",
     "xcraft-dev-rules": "^4.1.0",
     "prettier": "2.0.4",
     "xcraft-dev-prettier": "^2.0.0"

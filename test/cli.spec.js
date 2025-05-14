@@ -1,7 +1,7 @@
 'use strict';
 
 var path = require('path');
-var should = require('should'); /* jshint ignore:line */
+var {expect} = require('chai'); /* jshint ignore:line */
 
 var runShellCraft = function (args, callback) {
   var fork = require('child_process').fork;
@@ -16,7 +16,7 @@ describe('shellcraft', function () {
       var args = ['test0', 'the argument'];
 
       runShellCraft(args, function (code) {
-        code.should.be.equal(0);
+        expect(code).be.equal(0);
         done();
       });
     });
@@ -25,7 +25,7 @@ describe('shellcraft', function () {
       var args = ['test1'];
 
       runShellCraft(args, function (code) {
-        code.should.be.equal(1);
+        expect(code).be.equal(1);
         done();
       });
     });
@@ -37,7 +37,7 @@ describe('shellcraft', function () {
       /* no argument provided to test2... */
 
       runShellCraft(args, function (code) {
-        code.should.be.equal(0);
+        expect(code).be.equal(0);
         done();
       });
     });
@@ -50,7 +50,7 @@ describe('shellcraft', function () {
       ];
 
       runShellCraft(args, function (code) {
-        code.should.be.equal(0);
+        expect(code).be.equal(0);
         done();
       });
     });
@@ -59,7 +59,7 @@ describe('shellcraft', function () {
       var args = ['test4', 'the argument'];
 
       runShellCraft(args, function (code) {
-        code.should.be.equal(0);
+        expect(code).be.equal(0);
         done();
       });
     });
@@ -68,7 +68,7 @@ describe('shellcraft', function () {
       var args = ['test5', 'arg1', 'arg2', 'arg3'];
 
       runShellCraft(args, function (code) {
-        code.should.be.equal(0);
+        expect(code).be.equal(0);
         done();
       });
     });
