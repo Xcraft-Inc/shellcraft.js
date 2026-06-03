@@ -240,6 +240,11 @@ ShellCraft.prototype.shell = function (callback) {
       return;
     }
 
+    if (key.ctrl && key.name === 'c') {
+      self.uiPrompt.rl.write('\n');
+      return;
+    }
+
     switch (key.name) {
       /* Command history */
       case 'up': {
