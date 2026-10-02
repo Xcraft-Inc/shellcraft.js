@@ -404,17 +404,19 @@ ShellCraft.prototype.cli = function (callback) {
   /* Include all scoped commands. */
   program.option('-s, --scoped', 'include scoped commands (CLI only)');
 
-  const argv = process.argv.slice();
-  var opts = program.normalize(argv.slice(2));
-
   /* Handle properly arguments after --
    * It's necessary when shellcraft is used in an other shell where the
    * arguments are catch by an other library.
    */
-  if (opts[0] === '--') {
-    opts.shift();
-    argv.splice(1, 1);
+  let argv = [];
+  const doubleDash = process.argv.indexOf('--');
+  if (doubleDash !== -1) {
+    argv = [...process.argv.slice(0, 2), ...process.argv.slice(doubleDash + 1)];
+  } else {
+    argv = process.argv.slice();
   }
+
+  var opts = program.normalize(argv.slice(2));
 
   if (opts.indexOf('-s') !== -1 || opts.indexOf('--scoped') !== -1) {
     scoped = true;
